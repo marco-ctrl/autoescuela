@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="asistencia">Asistencia
-                                        <input type="checkbox" id="asistencia" class="form-control" value="0">
+                                        <input type="checkbox" id="asistencia" class="form-control" value="0" readonly>
                                     </label>
                                 </div>
                             </div>
