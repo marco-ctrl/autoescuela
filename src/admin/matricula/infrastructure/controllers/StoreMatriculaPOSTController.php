@@ -1,0 +1,108 @@
+<?php
+
+namespace Src\admin\matricula\infrastructure\controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\ItCuota;
+use App\Models\ItMatricula;
+use App\Models\ItPagoCuota;
+use App\Models\ItProgramacion;
+use Illuminate\Http\JsonResponse;
+use Src\admin\matricula\infrastructure\validators\StoreMatriculaValidatorRequest;
+use Symfony\Component\HttpFoundation\Response;
+
+final class StoreMatriculaPOSTController extends Controller
+{
+    public function index(StoreMatriculaValidatorRequest $request): JsonResponse
+    {
+        try {
+            //dd(auth()->user()->us_codigo,);
+            $matricula = ItMatricula::create([
+                'ma_fecha' => now()->format('Y-m-d H:i:s'),
+                'ma_estado' => 1,
+                'es_codigo' => $request->es_codigo,
+                'ma_ver_promedio' => 1,
+                'cu_codigo' => $request->cu_codigo,
+                'am_codigo' => $request->am_codigo,
+                'se_codigo' => $request->se_codigo,
+                'ma_categoria' => $request->ma_categoria,
+                'ma_costo' => $request->ma_costo,
+                'ma_duracion_curso' => $request->ma_duracion,
+                'us_codigo_create' => auth()->user()->us_codigo, 
+            ]);
+
+            if (!$matricula) {
+                return response()->json([
+                    'status' => false,
+                    'message' => __('error al guardar matricula'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $programacion = ItProgramacion::create([
+                'es_codigo' => $matricula->es_codigo,
+                'ye_codigo' => 1,
+                'pg_cuotas' => 1,
+                'pg_created' => now()->format('Y-m-d H:s:i'),
+                'pg_updated' => now()->format('Y-m-d H:s:i'),
+                'us_codigo' => auth()->user()->us_codigo,
+                'pg_estado' => 1,
+                'ma_codigo' => $matricula->ma_codigo,
+            ]);
+
+            if (!$programacion) {
+                return response()->json([
+                    'status' => false,
+                    'message' => __('error al guardar programacion'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $cuota = ItCuota::create([
+                'pg_codigo' => $programacion->pg_codigo,
+                'ct_numero' => 1,
+                'ct_importe' => $request->importe,
+                'ct_fecha_pago' => now()->format('Y-m-d'),
+                'ct_estado' => 1,
+                'ct_created' => now()->format('Y-m-d'),
+                'ct_updated' => now()->format('Y-m-d'),
+            ]);
+
+            if (!$cuota) {
+                return response()->json([
+                    'status' => false,
+                    'message' => __('error al guardar cuota'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $pagoCuota = ItPagoCuota::create([
+                'pc_tipo' => 0,
+                'pc_monto' => $cuota->ct_importe,
+                'pc_recurso' => null,
+                'pc_created' => now()->format('Y-m-d H:i:s'),
+                'pc_updated' => now()->format('Y-m-d H:i:s'),
+                'pc_estado' => 1,
+                'ct_codigo' => $cuota->ct_codigo,
+                'us_codigo' => auth()->user()->us_codigo
+            ]);
+
+            if (!$pagoCuota) {
+                return response()->json([
+                    'status' => false,
+                    'message' => __('error al guardar pago cuota'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => __('matricula creado exitosamente'),
+                'data' => $matricula,
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => false,
+                'message' => __('Failed to created the matricula'),
+                'error' => $ex->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+}
