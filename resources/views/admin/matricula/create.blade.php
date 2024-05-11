@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3>Registrar Matriculacion</h1>
+            <h6 class="m-0 font-weight-bold text-primary">Registrar Matricula</h6>
         </div>
         <div class="card-body container-fluid justify-content-center">
             <form id="form" autocomplete="off">
@@ -27,15 +27,19 @@
                             @include('admin.estudiante._partials.form')
                         </div>
                         <div class="modal-footer">
-                            <button id="btn-siguiente" type="button" class="btn btn-secondary apagar" data-dismiss="modal" style="display: none;"><i class="fas fa-chevron-right"></i> Siguiente</button>
-                            <button id="btn-guardar" type="submit" class="btn btn-primary apagar"><i class="fas fa-save"></i> Guardar</button>
+                            <button id="btn-siguiente" type="button" class="btn btn-secondary apagar" data-dismiss="modal"
+                                style="display: none;"><i class="fas fa-chevron-right"></i> Siguiente</button>
+                            <button id="btn-guardar" type="submit" class="btn btn-primary apagar"><i
+                                    class="fas fa-save"></i> Guardar</button>
                         </div>
                     </form>
                 </div>
-                
+
             </div>
         </div>
     </div>
+
+    @include('admin.components.modal-success-estudinate')
 
     @include('admin.components.modal-success', [
         'title' => 'Matriculacion registrada',
@@ -51,4 +55,5 @@
     <script src="{{ asset('js/admin/capturar_foto.js') }}"></script>
     <script src="{{ asset('js/admin/estudiante/estudianteAutocomplete.js') }}"></script>
     <script src="{{ asset('js/admin/curso/cursoAutocomplete.js') }}"></script>
+    <script src="{{ asset('js/admin/estudiante/validacion.js') }}"></script>
 @endsection

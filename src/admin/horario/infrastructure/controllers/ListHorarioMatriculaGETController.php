@@ -15,6 +15,7 @@ final class ListHorarioMatriculaGETController extends Controller {
     try {
         $horarioMatriculas = ItHorarioMatricula::with('docente')
             ->where('ma_codigo', $matricula->ma_codigo)
+            ->orderBy('hm_fecha_inicio', 'asc')
             ->get();
 
         return response()->json([

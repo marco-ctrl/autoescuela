@@ -1,8 +1,10 @@
 $(document).ready(function () {
     const user = JSON.parse(localStorage.getItem('user'));
-    const BASEURL = '/autoescuela/public/api/admin_matricula';
+    const BASEURL = '/autoescuela/public/api';
     const URLHORARIO = '/autoescuela/public/admin/horario-matricula/';
     const URLPDF = '/autoescuela/public/api/pdf/';
+
+    var codigoMatricula = 0;
 
     const token = localStorage.getItem('token');
 
@@ -12,7 +14,7 @@ $(document).ready(function () {
     function loadMatriculas(page) {
         $.ajax({
             type: "GET",
-            url: BASEURL + '?page=' + page,
+            url: BASEURL + '/admin_matricula?page=' + page,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer ' + token
@@ -100,6 +102,7 @@ $(document).ready(function () {
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="${URLHORARIO}${matricula.id}"><i class="fas fa-calendar-alt"></i> Horario Matricula</a>
+                                    <a class="dropdown-item evaluacion" href="#" data-codigo="${matricula.id}" data-matricula="${matricula.nro_matricula}"><i class="fas fa-calendar-alt"></i> Evaluacion</a>
                                     <a class="dropdown-item" href="${URLPDF}kardex/${matricula.id}/${user.us_codigo}" target="_blank"><i class="fas fa-file-alt"></i> kardex</a>
                                     <a class="dropdown-item" href="${URLPDF}matricula/${matricula.id}/${user.us_codigo}/A4" target="_blank"><i class="fas fa-file-alt"></i> PDF A4</a>
                                     <a class="dropdown-item" href="${URLPDF}matricula/${matricula.id}/${user.us_codigo}/ticket" target="_blank"><i class="fas fa-file-alt"></i> PDF ticket</a>
@@ -108,5 +111,89 @@ $(document).ready(function () {
                         </td>
                     </tr>`;
         return html;
+    }
+
+    $(document).on('click', '.evaluacion', function (e) {
+        e.preventDefault();
+        codigoMatricula = $(this).data('codigo');
+        let matricula = $(this).data('matricula');
+        
+        $('#modalEvaluacionTitle').html('Evaluacion de Matricula: ' + matricula);
+        $('#modalEvaluacion').modal('show');
+    });
+
+    $('#btnEvaluacion').click(function (e) {
+        let data = {
+            codigo: codigoMatricula,
+            fecha: $('#fecha').val(),
+            sede: $('#sede').val(), 
+        }
+        $.ajax({
+            type: "PUT",
+            url: BASEURL + '/admin_matricula/evaluacion/' + codigoMatricula,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token // Pasar el token como parte de la cabecera de autorización
+            },
+            data: data,
+            beforeSend: function () {
+                $('#overlay').show();
+            },
+            complete: function () {
+                $('#overlay').hide();
+            },
+            success: function (response) {
+                $('#modalEvaluacion').modal('hide');
+                
+                if (response.status) {
+                    alertify.set('notifier', 'position', 'top-right')
+                    alertify.success(response.message);
+                    $('#formEvaluacion').trigger('reset');
+                }
+                else{
+                    alertify.set('notifier', 'position', 'top-right')
+                    alertyfy.error(response.message);
+                }
+                
+            },
+            error: function (xhr) {
+                console.error('Error al enviar datos:', xhr.responseJSON);
+
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
+                $.each(xhr.responseJSON.errors, function (key, value) {
+                    var inputField = $('#' + key);
+                    inputField.addClass('is-invalid');
+
+                    var errorFeedback = $('<div class="invalid-feedback"></div>').text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
+                    inputField.after(errorFeedback);
+                });
+            }
+        })
+    })
+
+    listarSede();
+
+    function listarSede() {
+        $.ajax({
+            url: BASEURL + '/admin_sede',
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+                var select = $('#sede');
+
+                if (response.status) {
+                    $.each(response.data, function (i, item) {
+                        select.append($('<option></option>').attr('value', item.se_descripcion).text(item.se_descripcion));
+                    });
+                } else {
+                    console.log('La respuesta del servidor no tiene un estado exitoso.');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error al cargar los datos: ', textStatus, errorThrown);
+            }
+        });
     }
 });

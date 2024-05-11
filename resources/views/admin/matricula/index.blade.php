@@ -42,9 +42,39 @@
             </ul>
         </nav>
     </div>
+
+    <div class="modal fade" id="modalEvaluacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEvaluacionTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                <div class="modal-body">
+                    <form id="formEvaluacion">
+                        <div class="form-group">
+                            <label for="fecha">Fecha</label>
+                            <input type="datetime-local" name="fecha" id="fecha" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="sede">Sede</label>
+                            <select class="form-control" name="sede" id="sede">
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnEvaluacion">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
     <script src="{{ asset('js/admin/matricula/lista.js') }}"></script>
-    <script src="{{ asset('js/admin/matricula/descargarPdf.js') }}"></script>
 @endsection

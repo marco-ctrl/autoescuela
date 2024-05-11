@@ -1,127 +1,162 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const token = localStorage.getItem('token');
-    const baseUrl = '/autoescuela/public/api';
+document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    const baseUrl = "/autoescuela/public/api";
 
     var horasClases = [];
     var horasOcupadas = [];
     var eventos = [];
 
-
     listarHorarios();
 
-    var calendarEl = document.getElementById('calendario');
+    var calendarEl = document.getElementById("calendario");
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'es',
-        initialView: 'timeGridWeek',
+        locale: "es",
+        slotMinTime: "06:00:00",
+        slotMaxTime: "20:00:00",
+        defaultTimedEventDuration: "01:00:00",
+        initialView: "timeGridWeek",
+        handleWindowResize: true,
         allDaySlot: false,
-        slotMinTime: '06:00:00',
-        slotMaxTime: '20:00:00',
         headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timeGridDay,timeGridWeek'
+            left: "prev,next today",
+            center: "title",
+            right: "timeGridDay,timeGridWeek",
         },
-        /*validRange: {
-            start: new Date(), // Puedes ajustar esto según tu necesidad
-            end: '2100-01-01' // Esto es solo para asegurarse de que no haya un final
-        },*/
         dateClick: function (info) {
-            let fechaFormateada = moment(info.date).format("YYYY-MM-DD HH:mm:ss");
+            let fechaFormateada = moment(info.date).format(
+                "YYYY-MM-DD HH:mm:ss"
+            );
             agregarHorario(fechaFormateada);
         },
+        eventContent: function (arg) {
+            let estudiante = arg.event.extendedProps.estudiante
+            if (estudiante === undefined) {
+                return {
+                    html: `<div class="fc-content" id="event-${arg.event.id}">
+                        <div class="fc-time">
+                          <span>${arg.timeText}</span>
+                        </div>
+                        <div class="fc-title-ocupado">Ocupado</div>
+                      </div>`,
+                };
+            } else {
+                return {
+                    html: `<div class="fc-content" id="event-${arg.event.id}">
+                        <div class="fc-time">
+                          <span class="bg-success span-horas">${arg.event.extendedProps.numero}</span>
+                          <span>${arg.timeText}</span>
+                          <span class="${arg.event.extendedProps.bgColor} span-horas" style="left: 0;">${arg.event.extendedProps.comentario}</span>
+                        </div>
+                        <div class="fc-title">
+                        ${arg.event.extendedProps.curso} <br> ${arg.event.extendedProps.estudiante} 
+                        </div>
+                      </div>`,
+                };
+            }
+            
+        },
         eventClick: function (info) {
-            // Mostrar modal con detalles del evento
-            $('#modalTitulo').text(info.event.title);
-            $('#modalInicio').text('Inicio: ' + moment(info.event.start).format("YYYY-MM-DD HH:mm:ss"));
-            $('#modalFin').text('Fin: ' + moment(info.event.end).format("YYYY-MM-DD HH:mm:ss"));
-            $('#modalDocente').text('Docente: ' + info.event.extendedProps.docente);
-            $('#modalDetalles').modal();
+            if(info.event.extendedProps.asistencia !== undefined){
+                if (info.event.extendedProps.asistencia == 1) {
+                    $('#asistencia').prop('checked', true);
+                    $('#justificacion').prop('disabled', true);
+                } else {
+                    $('#asistencia').prop('checked', false);
+                    $('#justificacion').prop('disabled', false);
+                }
+                // Mostrar modal con detalles del evento
+                $('#estudiante').val(info.event.extendedProps.estudiante);
+                $('#curso').val(info.event.extendedProps.curso);
+                $('#codigo').val(info.event.id);
+                $('#observacion').val(info.event.extendedProps.observacion);
+                $('#modalAsistencia').modal('show');
+            }
         },
         selectConstraint: "businessHours", // Restringe la selección a las horas hábiles
-        businessHours: { // Define las horas hábiles
-            startTime: '06:00', // Hora de inicio
-            endTime: '20:00', // Hora de fin
+        businessHours: {
+            // Define las horas hábiles
+            startTime: "06:00", // Hora de inicio
+            endTime: "20:00", // Hora de fin
         },
-
-
     });
+
     calendar.render(); // Renderiza el calendario
     calendar.gotoDate(new Date());
 
     function agregarHorario(fechaInicio) {
         var data = {
-            docente: $('#docente').val(),
-            do_codigo: $('#do_codigo').val(),
-            ma_codigo: $('#ma_codigo').val(),
+            docente: $("#docente").val(),
+            do_codigo: $("#do_codigo").val(),
+            ma_codigo: $("#ma_codigo").val(),
             hm_fecha_inicio: fechaInicio,
-            hm_color: $('#hm_color').val(),
-        }
+            hm_color: $("#hm_color").val(),
+        };
 
         $.ajax({
-            type: 'POST',
-            url: baseUrl + '/admin_horario/store',
+            type: "POST",
+            url: baseUrl + "/admin_horario/store",
             headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token
+                Accept: "application/json",
+                Authorization: "Bearer " + token,
             },
             data: data,
             beforeSend: function () {
-                $('#overlay').show();
+                $("#overlay").show();
             },
             success: function (response) {
-                $('#overlay').hide();
+                $("#overlay").hide();
                 if (response.status) {
                     listarHorarios();
-                }
-                else {
-                    alertify.set('notifier', 'position', 'top-right');
+                } else {
+                    alertify.set("notifier", "position", "top-right");
                     alertify.error(response.message);
                 }
-                $('.form-control').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
-
+                $(".form-control").removeClass("is-invalid");
+                $(".invalid-feedback").remove();
             },
             error: function (xhr) {
-                $('#overlay').hide();
-                console.error('Error al enviar datos:', xhr.responseJSON);
+                $("#overlay").hide();
+                console.error("Error al enviar datos:", xhr.responseJSON);
 
-                $('.form-control').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
+                $(".form-control").removeClass("is-invalid");
+                $(".invalid-feedback").remove();
 
                 $.each(xhr.responseJSON.errors, function (key, value) {
-                    var inputField = $('#' + key);
-                    inputField.addClass('is-invalid');
+                    var inputField = $("#" + key);
+                    inputField.addClass("is-invalid");
 
-                    var errorFeedback = $('<div class="invalid-feedback"></div>').text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
+                    var errorFeedback = $(
+                        '<div class="invalid-feedback"></div>'
+                    ).text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
                     inputField.after(errorFeedback);
                 });
-            }
+            },
         });
     }
 
     function listarHorarios() {
-        ma_codigo = $('#ma_codigo').val();
+        ma_codigo = $("#ma_codigo").val();
         $.ajax({
-            type: 'GET',
-            url: baseUrl + '/admin_horario/matricula/' + ma_codigo,
+            type: "GET",
+            url: baseUrl + "/admin_horario/matricula/" + ma_codigo,
             headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token
+                Accept: "application/json",
+                Authorization: "Bearer " + token,
             },
             beforeSend: function () {
-                $('#overlay').show();
+                $("#overlay").show();
             },
             complete: function () {
-                $('#overlay').hide();
+                $("#overlay").hide();
             },
             success: function (response) {
                 if (response.status) {
-                    var tbody = document.getElementById('horarios');
+                    var tbody = document.getElementById("horarios");
 
-                    tbody.innerHTML = '';
+                    tbody.innerHTML = "";
 
                     response.data.forEach(function (item) {
-                        var row = document.createElement('tr');
+                        var row = document.createElement("tr");
 
                         row.innerHTML = `
                             <td>${item.fecha}</td>
@@ -136,87 +171,88 @@ document.addEventListener('DOMContentLoaded', function () {
                             </td>`;
 
                         tbody.appendChild(row);
-
                     });
                     horasClases = response.data;
-                    
+
                     agregarEventos(eventos);
                     eventos = [];
-                }
-                else {
+                } else {
                     console.log(response.message);
                 }
             },
             error: function (xhr) {
-                $('#loader').hide();
-                console.error('Error al enviar datos:', xhr.responseJSON);
-            }
+                $("#loader").hide();
+                console.error("Error al enviar datos:", xhr.responseJSON);
+            },
         });
     }
 
     function listarHorariosDocente(do_codigo) {
         $.ajax({
-            type: 'GET',
+            type: "GET",
             headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token
+                Accept: "application/json",
+                Authorization: "Bearer " + token,
             },
             beforeSend: function () {
-                $('#overlay').show();
+                $("#overlay").show();
             },
             complete: function () {
-                $('#overlay').hide();
+                $("#overlay").hide();
             },
-            url: baseUrl + '/admin_horario/docente/' + do_codigo,
+            url: baseUrl + "/admin_horario/docente/" + do_codigo,
             success: function (response) {
                 horasOcupadas = response.data;
                 agregarEventos(eventos);
             },
             error: function (xhr) {
-                $('#loader').hide();
-                console.error('Error al enviar datos:', xhr.responseJSON);
-            }
+                $("#loader").hide();
+                console.error("Error al enviar datos:", xhr.responseJSON);
+            },
         });
     }
 
-    $(document).on('click', '.eliminar', function () {
-        var codigoHorario = $(this).data('codigo');
+    $(document).on("click", ".eliminar", function () {
+        var codigoHorario = $(this).data("codigo");
 
-        if (confirm('¿Estás seguro de que deseas eliminar este horario?')) {
+        if (confirm("¿Estás seguro de que deseas eliminar este horario?")) {
             $.ajax({
-                url: baseUrl + '/admin_horario/' + codigoHorario,
-                type: 'DELETE',
+                url: baseUrl + "/admin_horario/" + codigoHorario,
+                type: "DELETE",
                 headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + token
+                    Accept: "application/json",
+                    Authorization: "Bearer " + token,
                 },
                 success: function (response) {
-                    console.log('Horario eliminado con éxito.');
+                    console.log("Horario eliminado con éxito.");
 
-                    alertify.set('notifier', 'position', 'top-right')
+                    alertify.set("notifier", "position", "top-right");
                     alertify.success(response.message);
-                    listarHorarios()
+                    listarHorarios();
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error al eliminar el horario:', xhr.responseJSON);
-                }
+                    console.error(
+                        "Error al eliminar el horario:",
+                        xhr.responseJSON
+                    );
+                },
             });
         }
     });
 
     function agregarEventos(eventos) {
-        horasClases.forEach(evento => {
+        horasClases.forEach((evento) => {
             if (!eventoYaExiste(evento)) {
                 eventos.push(evento);
             }
         });
-        
-        horasOcupadas.forEach(evento => {
-            if (!eventoYaExiste(evento) || evento.title !== 'Ocupado') {
+
+        horasOcupadas.forEach((evento) => {
+            if (!eventoYaExiste(evento) || evento.title !== "Ocupado") {
                 eventos.push(evento);
             }
         });
-        
+
         calendar.removeAllEvents(eventos);
         eventos.forEach(function (evento) {
             calendar.addEvent({
@@ -226,73 +262,120 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: evento.end,
                 backgroundColor: evento.color,
                 docente: evento.docente,
-                extraOptions: {
-                    curso: "MEDIO CURSO 1",
-                    estudiante: "SANTOS CONDORI TORREZ",
-                    horas: 1
-                }
+                asistencia: evento.asistencia,
+                bgColor: evento.bgColor,
+                numero: evento.numero,
+                estudiante: evento.estudiante,
+                curso: evento.curso,
+                comentario: evento.asistencia == 0 ? 'F' :'A',
+                bgColor: evento.asistencia == 0 ? 'bg-danger' : 'bg-success',
             });
-
-            /*calendar.setOption('eventContent', function(info) {
-                // Crear el elemento contenedor del evento
-                var container = document.createElement('div');
-                container.classList.add('fc-content');
-            
-                // Crear el elemento para el tiempo del evento
-                var timeElement = document.createElement('div');
-                timeElement.classList.add('fc-time');
-                timeElement.dataset.start = info.event.start;
-                timeElement.dataset.full = `${info.event.start} - ${info.event.end}`;
-                timeElement.innerHTML = `<span>${info.event.start} - ${info.event.end}</span>`;
-                container.appendChild(timeElement);
-            
-                // Crear el elemento para el título del evento
-                var titleElement = document.createElement('div');
-                titleElement.classList.add('fc-title');
-                titleElement.innerHTML = `
-                    ${info.event.extendedProps.curso}<br>
-                    ${info.event.extendedProps.estudiante}
-                    <p class="bg-success span-horas">${info.event.extendedProps.horas}</p>
-                    <p class="${info.event.extendedProps.asistencia === 'Falta' ? 'bg-danger' : 'bg-success'} span-horas" style="left: 0;">
-                        ${info.event.extendedProps.asistencia === 'Falta' ? 'F' : 'A'}
-                    </p>
-                `;
-                container.appendChild(titleElement);
-            
-                return { domNodes: [container] };
-            });*/
         });
     }
 
-    $('#docente').autocomplete({
+    $("#docente").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: baseUrl + '/admin_docente/autocomplete',
+                url: baseUrl + "/admin_docente/autocomplete",
                 dataType: "json",
                 headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + token
+                    Accept: "application/json",
+                    Authorization: "Bearer " + token,
                 },
                 data: {
-                    term: request.term // envía el término de búsqueda al servidor
+                    term: request.term, // envía el término de búsqueda al servidor
                 },
                 success: function (resp) {
                     response(resp.data); // Envía los datos al widget Autocomplete
-                }
+                },
             });
         },
         select: function (event, ui) {
-            $('#do_codigo').val(ui.item.id);
-            listarHorariosDocente($('#do_codigo').val());
+            $("#do_codigo").val(ui.item.id);
+            listarHorariosDocente($("#do_codigo").val());
             eventos = [];
-        }
+        },
     });
 
-    $(document).on('click', '#btn-ver', function () {
-        $('#modalTableHorarios').modal('show');
+    $(document).on("click", "#btn-ver", function () {
+        $("#modalTableHorarios").modal("show");
     });
 
     function eventoYaExiste(evento) {
-        return eventos.some(e => e.id === evento.id && e.start === evento.start && e.end === evento.end);
+        return eventos.some(
+            (e) =>
+                e.id === evento.id &&
+                e.start === evento.start &&
+                e.end === evento.end
+        );
+    }
+
+    $('#btnGuardar').click(function () {
+        marcarAsistencia();
+    });
+
+    $('#asistencia').change(function() {
+        if($(this).is(':checked')) {
+            $(this).val(1);
+            $('#justificacion').prop('disabled', true);
+            $('#justificacion').val('');
+        } else {
+            $(this).val(0);
+            $('#justificacion').prop('disabled', false);
+        }
+    });
+
+    function marcarAsistencia() {
+        var data = {
+            asistencia: $('#asistencia').val(),
+            justificacion: $('#justificacion').val(),
+            observacion: $('#observacion').val(),
+            codigo: $('#codigo').val()
+        }
+        console.log(data);
+        $.ajax({
+            type: 'PUT',
+            url: baseUrl + `/docente_horario/horario-matricula/${data.codigo}/update`,
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            data: data,
+            beforeSend: function () {
+                $('#overlay').show();
+            },
+            complete: function () {
+                $('#overlay').hide();
+                $('#modalAsistencia').modal('hide');
+                listarHorarios();
+            },
+            success: function (response) {
+                if (response.status) {
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success(response.message);
+                }
+                else {
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.error(response.message);
+                }
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
+            },
+            error: function (xhr) {
+                console.error('Error al enviar datos:', xhr.responseJSON);
+
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
+                $.each(xhr.responseJSON.errors, function (key, value) {
+                    var inputField = $('#' + key);
+                    inputField.addClass('is-invalid');
+
+                    var errorFeedback = $('<div class="invalid-feedback"></div>').text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
+                    inputField.after(errorFeedback);
+                });
+            }
+        });
     }
 });

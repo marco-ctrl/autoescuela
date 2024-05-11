@@ -49,7 +49,7 @@ final class StoreEstudiantePOSTController extends Controller
                 'es_documento' => $request->es_documento,
                 'es_expedicion' => strtoupper($request->es_expedicion),
                 'es_nombre' => strtoupper($request->es_nombre),
-                'es_apellido' => strtoupper($request->es_apellido),
+                'es_apellido' => strtoupper($request->ape_paterno) . ' ' . strtoupper($request->ape_materno),
                 'es_correo' => $correo,
                 'es_nacimiento' => $request->es_nacimiento,
                 'es_genero' => $request->es_genero,
@@ -64,8 +64,7 @@ final class StoreEstudiantePOSTController extends Controller
                 'us_codigo_create' => auth()->user()->us_codigo,
             ]);
 
-            //UsuarioCreadoEvent::dispatch($estudiante, $password, 'Estudiante');
-            event(new UsuarioCreadoEvent($estudiante, $password, 'Estudiante'));
+            //event(new UsuarioCreadoEvent($estudiante, $password, 'Estudiante'));
 
             return response()->json([
                 'status' => true,
@@ -75,7 +74,7 @@ final class StoreEstudiantePOSTController extends Controller
         } catch (\Exception $ex) {
             return response()->json([
                 'status' => false,
-                'message' => __('Failed to created the matricula'),
+                'message' => __('Failed to created the estudiante'),
                 'error' => $ex->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

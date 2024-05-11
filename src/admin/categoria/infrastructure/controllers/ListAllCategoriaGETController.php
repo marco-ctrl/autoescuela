@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ListAllCategoriaGETController extends Controller { 
 
- public function index() { 
+ public function index(int $edad): JsonResponse { 
     try {
-        $categoria = ItCategoriaAmbiente::all();
+        $categoria = ItCategoriaAmbiente::where('ca_edad', '<=', $edad)->get();
 
         return response()->json([
             'status' => true,

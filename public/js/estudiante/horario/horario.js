@@ -22,6 +22,33 @@ document.addEventListener('DOMContentLoaded', function () {
             center: 'title',
             right: 'timeGridDay,timeGridWeek'
         },
+        eventContent: function (arg) {
+            let estudiante = arg.event.extendedProps.estudiante
+            if (estudiante === undefined) {
+                return {
+                    html: `<div class="fc-content" id="event-${arg.event.id}">
+                        <div class="fc-time">
+                          <span>${arg.timeText}</span>
+                        </div>
+                        <div class="fc-title-ocupado">Ocupado</div>
+                      </div>`,
+                };
+            } else {
+                return {
+                    html: `<div class="fc-content" id="event-${arg.event.id}">
+                        <div class="fc-time">
+                          <span class="bg-success span-horas">${arg.event.extendedProps.numero}</span>
+                          <span>${arg.timeText}</span>
+                          <span class="${arg.event.extendedProps.bgColor} span-horas" style="left: 0;">${arg.event.extendedProps.comentario}</span>
+                        </div>
+                        <div class="fc-title">
+                        ${arg.event.extendedProps.curso} <br> ${arg.event.extendedProps.estudiante} 
+                        </div>
+                      </div>`,
+                };
+            }
+            
+        },
         eventClick: function (info) {
             if (info.event.extendedProps.asistencia == 1) {
                 $('#asistencia').prop('checked', true);
@@ -102,41 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: evento.end,
                 backgroundColor: evento.color,
                 docente: evento.docente,
+                asistencia: evento.asistencia,
+                bgColor: evento.bgColor,
+                numero: evento.numero,
                 estudiante: evento.estudiante,
                 curso: evento.curso,
-                observacion: evento.observacion,
-                asistencia: evento.asistencia,
+                comentario: evento.asistencia == 0 ? 'F' :'A',
+                bgColor: evento.asistencia == 0 ? 'bg-danger' : 'bg-success',
             });
-
-            /*calendar.setOption('eventContent', function(info) {
-                // Crear el elemento contenedor del evento
-                var container = document.createElement('div');
-                container.classList.add('fc-content');
-            
-                // Crear el elemento para el tiempo del evento
-                var timeElement = document.createElement('div');
-                timeElement.classList.add('fc-time');
-                timeElement.dataset.start = info.event.start;
-                timeElement.dataset.full = `${info.event.start} - ${info.event.end}`;
-                timeElement.innerHTML = `<span>${info.event.start} - ${info.event.end}</span>`;
-                container.appendChild(timeElement);
-            
-                // Crear el elemento para el título del evento
-                var titleElement = document.createElement('div');
-                titleElement.classList.add('fc-title');
-                titleElement.innerHTML = `
-                    ${info.event.extendedProps.curso}<br>
-                    ${info.event.extendedProps.estudiante}
-                    <p class="bg-success span-horas">${info.event.extendedProps.horas}</p>
-                    <p class="${info.event.extendedProps.asistencia === 'Falta' ? 'bg-danger' : 'bg-success'} span-horas" style="left: 0;">
-                        ${info.event.extendedProps.asistencia === 'Falta' ? 'F' : 'A'}
-                    </p>
-                `;
-                container.appendChild(titleElement);
-            
-                return { domNodes: [container] };
-            });*/
-        });
+});
     }
 
     function eventoYaExiste(evento) {

@@ -1,10 +1,18 @@
 <div class="col-md-6 col-sm-12 col-lg-4">
     <div class="row">
+        <div class="col-md-3">
+            <label for="es_tipodocumento">Tipo*</label>
+            <select class="form-control" id="es_tipodocumento" name="es_tipodocumento">
+                <option value="">Seleccione</option>
+                <option value="1">CI</option>
+                <option value="2">CE</option>
+            </select>
+        </div>
         <div class="col-md-5">
             <div class="form-group">
                 <label for="es_documento">Documento*</label>
                 <input class="form-control estudiante" id="es_documento" name="es_documento"
-                    placeholder="Ingreso Numero Documento" required />
+                    placeholder="Ingresar Numero Documento" required />
             </div>
         </div>
         <div class="col-md-4">
@@ -25,34 +33,36 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-3">
-            <label for="es_tipodocumento">Tipo*</label>
-            <select class="form-control" id="es_tipodocumento" name="es_tipodocumento">
-                <option value="">Seleccione</option>
-                <option value="1">CI</option>
-                <option value="2">CE</option>
-            </select>
-        </div>
+
     </div>
     <div class="form-group">
         <label for="es_nombre">Nombres*</label>
-        <input type="text" class="form-control" id="es_nombre" name="es_nombre" placeholder="Ingreso Nombres"
+        <input type="text" class="form-control" id="es_nombre" name="es_nombre" placeholder="Ingresar Nombres"
             required />
     </div>
-    <div class="form-group">
-        <label for="es_apellido">Apellidos*</label>
-        <input type="text" class="form-control" id="es_apellido" name="es_apellido" placeholder="Ingreso Apellidos"
-            required />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ape_paterno">Apellido Paterno</label>
+                <input type="text" class="form-control" id="ape_paterno" name="ape_paterno" placeholder="Ingresar Apellido Paterno"/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ape_materno">Apellido Materno</label>
+                <input type="text" class="form-control" id="ape_materno" name="ape_materno" placeholder="Ingresar Apellido Materno"/>
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <label for="es_nacimiento">Fecha de Nacimiento*</label>
         <input type="date" class="form-control" id="es_nacimiento" name="es_nacimiento"
-            placeholder="Ingreso Fecha de Nacimiento" required />
+            placeholder="Ingresar Fecha de Nacimiento" required />
     </div>
     <div class="form-group">
         <label for="es_celular">Numero de Contacto*</label>
         <input type="tel" class="form-control" id="es_celular" name="es_celular"
-            placeholder="Ingreso Numero de Contacto" required />
+            placeholder="Ingresar Numero de Contacto" required />
     </div>
 </div>
 <div class="col-md-6 col-sm-12 col-lg-4">
@@ -69,29 +79,30 @@
     </div>
     <div class="form-group">
         <label for="es_direccion">Direccion*</label>
-        <textarea class="form-control" id="es_direccion" name="es_direccion" placeholder="Ingreso Direccion" required></textarea>
+        <textarea class="form-control" id="es_direccion" name="es_direccion" placeholder="Ingresar Direccion" required></textarea>
     </div>
     <div class="form-group">
         <label for="es_oberservacion">Observacion</label>
-        <textarea class="form-control" id="es_observacion" name="es_observacion" placeholder="Ingreso Observacion" ></textarea>
+        <textarea class="form-control" id="es_observacion" name="es_observacion" placeholder="Ingresar Observacion"></textarea>
     </div>
     <div class="form-group">
         <label for="es_correo">Correo Electronico</label>
         <input type="email" class="form-control" id="es_correo" name="es_correo"
-            placeholder="Ingreso Correo Electronico" />
+            placeholder="Ingresar Correo Electronico" />
     </div>
 </div>
 <div class="col-md-12 col-sm-12 col-lg-4">
     <div class="d-block d-sm-block d-md-none">
-        <button type="button" class="btn btn-secondary btn-block" onclick="document.getElementById('file-upload').click();">
+        <button type="button" class="btn btn-secondary btn-block"
+            onclick="document.getElementById('file-upload').click();">
             <i class="fas fa-camera"></i> Tomar Foto</button>
     </div>
     <br>
     <div class="row">
         <div class="col-md-6 d-none d-sm-none d-md-block">
-            <button type="button" id="encender" class="btn btn-success btn-block
-                    text-center"><i
-                    class="fas fa-video "></i>
+            <button type="button" id="encender"
+                class="btn btn-success btn-block
+                    text-center"><i class="fas fa-video "></i>
                 Encender</button>
         </div>
         <div class="col-md-6 d-none d-sm-none d-md-block">
@@ -113,7 +124,6 @@
             <img id="imagen" width="140" height="120">
         </div>
     </div>
-    <br>
     <div class="row">
         <div class="col-md-6 p-2 d-none d-sm-none d-md-block">
             <!-- Trigger canvas web API -->

@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="asistencia">Asistencia
-                                        <input type="checkbox" id="asistencia" class="form-control" value="0" readonly>
+                                        <input type="checkbox" id="asistencia" class="form-control" value="0" disabled>
                                     </label>
                                 </div>
                             </div>
@@ -70,7 +70,5 @@
 @endsection
 
 @section('scripts')
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>
-    <script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>
     <script src="{{ asset('js/estudiante/horario/horario.js') }}"></script>
 @endsection

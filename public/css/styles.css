@@ -74,11 +74,13 @@ table.text-small th {
 }
 
 .ui-autocomplete {
-    z-index: 9999 !important; /* Ajusta el valor según sea necesario */
+    z-index: 9999 !important;
+    /* Ajusta el valor según sea necesario */
 }
 
 .modal {
-    z-index: 1050; /* Ajusta el valor según sea necesario */
+    z-index: 1050;
+    /* Ajusta el valor según sea necesario */
 }
 
 .event-container {
@@ -86,6 +88,39 @@ table.text-small th {
     border: 1px solid #ced4da;
     padding: 5px;
     margin-bottom: 5px;
+
+    /*height: 60px;*/
+}
+
+.fc-timegrid-event-harness {
+    display: grid;
+    place-items: center;
+    /*height: auto !important;
+    /* Ajusta automáticamente la altura */
+}
+
+.fc-timegrid-event-harness a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+.fc-title {
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.fc-title-ocupado {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.fc-event-time {
+    font-size: 12px;
+    color: #6c757d;
+    cursor: pointer;
 }
 
 .event-title {
@@ -103,3 +138,8 @@ table.text-small th {
     color: #6c757d;
 }
 
+.span-horas {
+    border-radius: 30%;
+    padding-left: 5px;
+    padding-right: 5px;
+}

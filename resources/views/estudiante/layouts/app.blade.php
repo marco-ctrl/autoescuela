@@ -88,7 +88,10 @@
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
     <script src="{{ asset('js/admin/index.js') }}"></script>
     <script src="{{ asset('js/auth/login.js')}}"></script>
-    
+    <script src="{{ asset('vendor/alertifyjs/alertify.min.js') }}"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>
+    <!--<script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>-->
+    <script src="{{ asset('vendor/fullcalendar-6.1.11/dist/index.global.js') }}"></script>
     <!-- Page level custom scripts -->
     @yield('scripts')
 </body>

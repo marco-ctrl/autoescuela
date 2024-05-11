@@ -42,9 +42,13 @@ class ListHorarioMatriculaResource extends JsonResource
             'hora_final' => Carbon::parse($this->hm_fecha_final)->format('H:i'),
             'color' => $color,
             'docente' => $this->docente->do_nombre . ' ' . $this->docente->do_apellido,
-            'title' => 'Clase' . ' ' . $this->hm_numero,
+            'curso' => $this->matricula->curso->cu_descripcion,
+            'title' => 'Clases',
+            'estudiante' => $this->matricula->estudiante->es_nombre . ' ' . $this->matricula->estudiante->es_apellido,
             'comentario' => 'Asistencia',
+            'asistencia' => $this->hm_asistencia,
             'observacion' => $this->hm_observacion_asistencia,
+            'numero' => $this->hm_numero,
         ];
     }
 }

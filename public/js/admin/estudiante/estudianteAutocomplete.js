@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    const URL = (ruta) => {
+        var baseurl = window.location.origin;
+        return baseurl+'/'+ruta;
+    }
     const BASEURL = '/autoescuela/public/api';
     const token = localStorage.getItem('token');
 
@@ -27,6 +31,7 @@ $(document).ready(function () {
             $('#estudiante').val(ui.item.value);
             console.log(ui.item.id);
             getEstudiante(ui.item.id);
+            
             $('#btn-siguiente').show();
             $('#btn-guardar').hide();
         }
@@ -34,6 +39,7 @@ $(document).ready(function () {
 
     $('#btn-siguiente').on('click', function () {
         cursoFocus();
+        listarCategoria($('#edad').val());
     });
 
     function cursoFocus(){
@@ -59,7 +65,8 @@ $(document).ready(function () {
                     $('#es_tipodocumento').val(estudiante.tipo_documento);
                     $('#es_nacimiento').val(estudiante.fecha_nacimiento);
                     $('#es_nombre').val(estudiante.nombre);
-                    $('#es_apellido').val(estudiante.apellido);
+                    $('#ape_paterno').val(estudiante.ape_paterno);
+                    $('#ape_materno').val(estudiante.ape_materno);
                     $('#es_direccion').val(estudiante.direccion);
                     $('#es_celular').val(estudiante.celular);
                     $('#es_observacion').val(estudiante.observacion);
@@ -71,6 +78,7 @@ $(document).ready(function () {
                     }
                     $('#es_foto').val(estudiante.foto);
                     $('#imagen').attr('src', estudiante.foto);
+                    $('#edad').val(estudiante.edad);
                 }
 
             },
@@ -86,7 +94,8 @@ $(document).ready(function () {
     var es_expedicion = document.getElementById('es_expedicion');
     var es_tipodocumento = document.getElementById('es_tipodocumento');
     var es_nombre = document.getElementById('es_nombre');
-    var es_apellido = document.getElementById('es_apellido');
+    var ape_paterno = document.getElementById('ape_paterno');
+    var ape_materno = document.getElementById('ape_materno');
     var es_nacimiento = document.getElementById('es_nacimiento');
     var es_direccion = document.getElementById('es_direccion');
     var es_telefono = document.getElementById('es_celular');
@@ -107,14 +116,15 @@ $(document).ready(function () {
             es_expedicion: es_expedicion.value,
             es_tipodocumento: es_tipodocumento.value,
             es_nombre: es_nombre.value,
-            es_apellido: es_apellido.value,
             es_nacimiento: es_nacimiento.value,
             es_genero: es_genero.value,
             es_direccion: es_direccion.value,
             es_celular: es_telefono.value,
             es_correo: es_correo.value,
             es_observacion: es_observacion.value,
-            es_foto: es_foto.value
+            es_foto: es_foto.value,
+            ape_paterno: ape_paterno.value,
+            ape_materno: ape_materno.value
         };
         //console.log(estudiante);
         $.ajax({
@@ -136,12 +146,15 @@ $(document).ready(function () {
 
                     $('#es_codigo').val(estudiante.id);
                     $('#estudiante').val(estudiante.documento + ' - ' + estudiante.nombre + ' ' + estudiante.apellido);
-                    $('#successModal').modal('show');
+                    $('#edad').val(estudiante.edad);
+                    $('#successModalEstudiante').modal('show');
                     
-                    $('#acceptBtn').click(function () {
+                    $('#acceptBtnEstudiante').click(function () {
                         $('#modalRegistrarEstudiante').modal('hide');
                         cursoFocus();
                     });
+
+                    listarCategoria($('#edad').val());
                 }
             },
             error: function (xhr) {
@@ -160,6 +173,29 @@ $(document).ready(function () {
                 });
             }
         })
+    }
+
+    function listarCategoria(edad) {
+        $.ajax({
+            url: BASEURL + '/admin_categoria/' + edad,
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+                var select = $('#ma_categoria');
+
+                if (response.status) {
+                    // Itera sobre el arreglo 'data' dentro de la respuesta
+                    $.each(response.data, function (i, item) {
+                        select.append($('<option></option>').attr('value', item.ca_descripcion).text(item.ca_descripcion));
+                    });
+                } else {
+                    console.log('La respuesta del servidor no tiene un estado exitoso.');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error al cargar los datos: ', textStatus, errorThrown);
+            }
+        });
     }
 
     $('#es_documento').on('input', function() {

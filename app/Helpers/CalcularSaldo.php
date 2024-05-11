@@ -13,21 +13,15 @@ class CalcularSaldo
         ->where('ma_codigo', $ma_codigo)
         ->first();
 
-        if(!$programacion)
+        /*if(!$programacion)
         {
             return $saldo = null;
-        }
+        }*/
 
         $matricula = ItMatricula::find($ma_codigo);
         $importe = $programacion->cuota->sum('ct_importe');
         
-        if($matricula->ma_costo == null)
-        {
-            $curso = ItCurso::find($matricula->cu_codigo);
-            $matricula->ma_costo = $curso->cu_costo;
-            $matricula->save();
-        }
-        $saldo = $matricula->ma_costo - $importe;
+        $saldo = $matricula->ma_costo_total - $importe;
         
         return $saldo;
     }

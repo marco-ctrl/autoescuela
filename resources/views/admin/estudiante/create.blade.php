@@ -15,6 +15,7 @@
         </form>
         </div> 
     </div>
+    
     @include('admin.components.modal-success', [
         'title' => 'Registro exitoso',
         'message' => 'El estudiante se registró correctamente.',

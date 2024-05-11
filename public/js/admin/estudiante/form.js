@@ -6,13 +6,14 @@ $(document).ready(function () {
     var es_expedicion = document.getElementById('es_expedicion');
     var es_tipodocumento = document.getElementById('es_tipodocumento');
     var es_nombre = document.getElementById('es_nombre');
-    var es_apellido = document.getElementById('es_apellido');
     var es_nacimiento = document.getElementById('es_nacimiento');
     var es_direccion = document.getElementById('es_direccion');
     var es_telefono = document.getElementById('es_celular');
     var es_correo = document.getElementById('es_correo');
     var es_observacion = document.getElementById('es_observacion');
     var es_foto = document.getElementById('es_foto');
+    var ape_paterno = document.getElementById('ape_paterno');
+    var ape_materno = document.getElementById('ape_materno');
 
     $('#formEstudiante').submit(function (e) {
         e.preventDefault();
@@ -20,7 +21,6 @@ $(document).ready(function () {
     });
 
     function agregarEstudiante() {
-        //console.log(es_documento.value);
         let es_genero = document.querySelector('input[name="es_genero"]:checked');
         var estudiante = {
             es_documento: es_documento.value,
@@ -34,7 +34,9 @@ $(document).ready(function () {
             es_celular: es_telefono.value,
             es_correo: es_correo.value,
             es_observacion: es_observacion.value,
-            es_foto: es_foto.value
+            es_foto: es_foto.value,
+            ape_paterno: ape_paterno.value,
+            ape_materno: ape_materno.value
         };
         //console.log(estudiante);
         $.ajax({

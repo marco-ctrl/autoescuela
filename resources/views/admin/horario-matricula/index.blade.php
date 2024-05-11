@@ -3,10 +3,11 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h5 class="m-0 font-weight-bold text-primary">Agregar Horarios para el Estudiante {{ $matricula->estudiante->es_nombre }}
+            <h5 class="m-0 font-weight-bold text-primary">Agregar Horarios para el Estudiante
+                {{ $matricula->estudiante->es_nombre }}
                 {{ $matricula->estudiante->es_apellido }}</h5>
-                <h6 class="m-0 font-weight-bold text-primary">Curso: {{ $matricula->curso->cu_descripcion }}&emsp;
-                    Duracion: {{ $matricula->ma_duracion_curso }}Hrs.&emsp;</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Curso: {{ $matricula->curso->cu_descripcion }}&emsp;
+                Duracion: {{ $matricula->ma_duracion_curso }}Hrs.&emsp;</h6>
         </div>
         <div class="card-body">
             <div class="row mb-3">
@@ -30,7 +31,8 @@
                             </select>
                         </div>
                         <div class="form-group mb-2">
-                            <button type="button" id="btn-ver" class="btn btn-primary"><i class="fas fa-clipboard-list"></i> Ver</button>
+                            <button type="button" id="btn-ver" class="btn btn-primary"><i
+                                    class="fas fa-clipboard-list"></i> Ver</button>
                         </div>
                     </form>
 
@@ -91,6 +93,8 @@
             </div>
         </div>
     </div>
+    @include('admin.components.modal-asistencia')
+    
 @endsection
 
 @section('styles')
@@ -99,6 +103,7 @@
 
 @section('scripts')
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>
-    <script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>
+    <!--<script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>-->
+    <script src="{{ asset('vendor/fullcalendar-6.1.11/dist/index.global.js') }}"></script>
     <script src="{{ asset('js/admin/horario_matricula/form.js') }}"></script>
 @endsection

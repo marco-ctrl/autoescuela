@@ -16,7 +16,19 @@ final class StoreMatriculaPOSTController extends Controller
     public function index(StoreMatriculaValidatorRequest $request): JsonResponse
     {
         try {
-            //dd(auth()->user()->us_codigo,);
+            $costoEvluacion = 0;
+            $costoTotal = 0;
+
+            if($request->ma_evaluacion == "1")
+            {
+                $costoEvluacion = $request->ma_costo_evaluacion;
+                $costoTotal = $request->ma_costo_curso + $request->ma_costo_evaluacion;
+            }
+            if($request->ma_evaluacion == "0")
+            {
+                $costoTotal = $request->ma_costo_curso;
+            }
+
             $matricula = ItMatricula::create([
                 'ma_fecha' => now()->format('Y-m-d H:i:s'),
                 'ma_estado' => 1,
@@ -26,7 +38,10 @@ final class StoreMatriculaPOSTController extends Controller
                 'am_codigo' => $request->am_codigo,
                 'se_codigo' => $request->se_codigo,
                 'ma_categoria' => $request->ma_categoria,
-                'ma_costo' => $request->ma_costo,
+                'ma_costo_curso' => $request->ma_costo_curso,
+                'ma_costo_evaluacion' => $costoEvluacion,
+                'ma_evaluacion' => $request->ma_evaluacion,
+                'ma_costo_total' => $costoTotal,
                 'ma_duracion_curso' => $request->ma_duracion,
                 'us_codigo_create' => auth()->user()->us_codigo, 
             ]);
@@ -95,6 +110,7 @@ final class StoreMatriculaPOSTController extends Controller
                 'status' => true,
                 'message' => __('matricula creado exitosamente'),
                 'data' => $matricula,
+                //'data' => $request->all(),
             ], Response::HTTP_OK);
 
         } catch (\Exception $ex) {

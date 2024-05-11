@@ -1,9 +1,10 @@
 $(document).ready(function () {
 
     const BASEURL = '/autoescuela/public/api/admin_estudiante';
+    const BASEURLPDF = 'autoescuela/public/api/pdf/credenciales-estudiante';
     const token = localStorage.getItem('token');
-    console.log(token);
-
+    const user = JSON.parse(localStorage.getItem('user'));
+    
     loadEstudiantes(1); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
@@ -87,6 +88,9 @@ $(document).ready(function () {
                         <td>${estudiante.edad}</td>
                         <td>${estudiante.usuario}</td>
                         <td><h5><span class="badge badge-${estudiante.color}">${estudiante.estado}</span></h5></td>
+                        <td><a href="/${BASEURLPDF}/${estudiante.id}/${user.us_codigo}"
+                        target="_blank" 
+                            class="btn btn-primary btn-sm">Credencial</a></td>
                         <td><a href="/autoescuela/public/admin/estudiante/${estudiante.id}" 
                             class="btn btn-primary btn-sm">Ver</a></td>
                     </tr>`;

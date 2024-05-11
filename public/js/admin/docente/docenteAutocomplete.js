@@ -1,4 +1,10 @@
 $(document).ready(function() {
+
+    const URL = (ruta) => {
+        var baseurl = window.location.origin;
+        return baseurl+'/'+ruta;
+    }
+
     $('#docente').autocomplete({
         source: function(request, response) {
             $.ajax({
