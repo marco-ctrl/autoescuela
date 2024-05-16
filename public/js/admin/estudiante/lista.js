@@ -1,9 +1,24 @@
 $(document).ready(function () {
 
-    const BASEURL = '/autoescuela/public/api/admin_estudiante';
-    const BASEURLPDF = 'autoescuela/public/api/pdf/credenciales-estudiante';
+    const BASEURL = window.apiUrl + '/api/admin_estudiante';
+    const BASEURLPDF = window.apiUrl + '/api/pdf/credenciales-estudiante';
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
+
+    var es_documento = document.getElementById('es_documento');
+    var es_expedicion = document.getElementById('es_expedicion');
+    var es_tipodocumento = document.getElementById('es_tipodocumento');
+    var es_nombre = document.getElementById('es_nombre');
+    var ape_paterno = document.getElementById('ape_paterno');
+    var ape_materno = document.getElementById('ape_materno');
+    var es_nacimiento = document.getElementById('es_nacimiento');
+    var es_direccion = document.getElementById('es_direccion');
+    var es_telefono = document.getElementById('es_celular');
+    var es_correo = document.getElementById('es_correo');
+    var es_observacion = document.getElementById('es_observacion');
+    var es_foto = document.getElementById('es_foto');
+    var es_codigo;
+
     
     loadEstudiantes(1); // Cargar la primera página al cargar la página
 
@@ -78,7 +93,7 @@ $(document).ready(function () {
     function cargarTablaEstudiante(estudiante)
     {
         let html = `<tr>
-                        <td><img src="${estudiante.foto}" width="40" class="img-profile rounded-circle"></td>
+                        <td><img src="${estudiante.foto}" class="img-perfil-tabla"></td>
                         <td>${estudiante.documento}</td>
                         <td>${estudiante.nombre}</td>
                         <td>${estudiante.apellido}</td>
@@ -91,9 +106,117 @@ $(document).ready(function () {
                         <td><a href="/${BASEURLPDF}/${estudiante.id}/${user.us_codigo}"
                         target="_blank" 
                             class="btn btn-primary btn-sm">Credencial</a></td>
-                        <td><a href="/autoescuela/public/admin/estudiante/${estudiante.id}" 
-                            class="btn btn-primary btn-sm">Ver</a></td>
+                        <td><button class="btn btn-secondary btn-sm editar" title="editar" data-codigo="${estudiante.id}"><i class="far fa-edit"></i></button></td>
                     </tr>`;
         return html;
+    }
+
+    $(document).on('click', '.editar', function(e) {
+        e.preventDefault();
+        es_codigo = $(this).data('codigo');
+        getEstudiante(es_codigo);
+    });
+
+    function getEstudiante(id) {
+        $.ajax({
+            url: BASEURL + '/' + id + '/show',
+            type: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token // Pasar el token como parte de la cabecera de autorización
+            },
+            success: function (response) {
+                if (response.status) {
+                    estudiante = response.data;
+                    $('#es_codigo').val(estudiante.id);
+                    $('#es_documento').val(estudiante.documento);
+                    $('#es_expedicion').val(estudiante.expedicion);
+                    $('#es_tipodocumento').val(estudiante.tipo_documento);
+                    $('#es_nacimiento').val(estudiante.fecha_nacimiento);
+                    $('#es_nombre').val(estudiante.nombre);
+                    $('#ape_paterno').val(estudiante.ape_paterno);
+                    $('#ape_materno').val(estudiante.ape_materno);
+                    $('#es_direccion').val(estudiante.direccion);
+                    $('#es_celular').val(estudiante.celular);
+                    $('#es_observacion').val(estudiante.observacion);
+                    $('#es_correo').val(estudiante.correo);
+                    if (estudiante.genero == 1) {
+                        document.getElementById('masculino').checked = true;
+                    } else {
+                        document.getElementById('femenino').checked = true;
+                    }
+                    $('#es_foto').val(estudiante.foto);
+                    $('#imagen').attr('src', estudiante.foto);
+                    $('#edad').val(estudiante.edad);
+
+                    $('#modalEditarEstudiante').modal('show');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+
+            }
+        });
+    }
+
+    $('#btnGuardar').click(function () {
+        updateEstudiante(es_codigo);
+    });
+
+    function updateEstudiante(id) {
+        let es_genero = document.querySelector('input[name="es_genero"]:checked');
+        var estudiante = {
+            es_documento: es_documento.value,
+            es_expedicion: es_expedicion.value,
+            es_tipodocumento: es_tipodocumento.value,
+            es_nombre: es_nombre.value,
+            es_nacimiento: es_nacimiento.value,
+            es_genero: es_genero.value,
+            es_direccion: es_direccion.value,
+            es_celular: es_telefono.value,
+            es_correo: es_correo.value,
+            es_observacion: es_observacion.value,
+            es_foto: es_foto.value,
+            ape_paterno: ape_paterno.value,
+            ape_materno: ape_materno.value
+        };
+        console.log(estudiante);
+        $.ajax({
+            url: BASEURL + '/' + id,
+            type: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token // Pasar el token como parte de la cabecera de autorización
+            },
+            data: estudiante,
+            beforeSend: function () {
+                $("#overlay").show();
+            },
+            success: function (response) {
+                $("#overlay").hide();
+                if(response.status){
+                    $('#modalEditarEstudiante').modal('hide');
+                    loadEstudiantes(1);
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success(response.message);
+                }
+            },
+            error: function (xhr) {
+                $('#overlay').hide();
+                console.error('Error al enviar datos:', xhr.responseJSON);
+
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+
+                $.each(xhr.responseJSON.errors, function (key, value) {
+                    var inputField = $('#' + key);
+                    inputField.addClass('is-invalid');
+
+                    var errorFeedback = $('<div class="invalid-feedback"></div>').text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
+                    inputField.after(errorFeedback);
+                });
+            }
+        });
     }
 });

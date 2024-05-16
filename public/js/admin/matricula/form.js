@@ -2,8 +2,8 @@ $(document).ready(function () {
     $('#modalRegistrarEstudiante').modal('show');
 
     var token = localStorage.getItem('token');
-    const BASEURL = '/autoescuela/public/api';
-    const URLPDF = '/autoescuela/public/api/pdf/';
+    const BASEURL = window.apiUrl + '/api';
+    const URLPDF = window.apiUrl + '/api/pdf/';
     const user = JSON.parse(localStorage.getItem('user'));
 
     var ma_duracion = document.getElementById('ma_duracion');

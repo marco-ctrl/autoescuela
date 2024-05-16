@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $data['title'] }}</title>
+    <title>Autoescuela</title>
     <style>
         body {
             font-family: Arial, sans-serif;

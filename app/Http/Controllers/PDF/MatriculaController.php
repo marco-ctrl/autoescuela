@@ -25,12 +25,6 @@ class MatriculaController extends Controller
         }
         $usuario = User::find($token->tokenable_id);
 
-        $data = [
-            'title' => 'Matricula PDF',
-            'date' => date('m/d/Y'),
-            'time' => date('h:i:s A'),
-        ];
-
         $matriculaData = new ListAllMatriculaResource($matricula);
         $matriculas = $matriculaData->toArray($request);
 
@@ -49,11 +43,11 @@ class MatriculaController extends Controller
 
         $institucion = ItInstitucion::first();
 
-        $pdf = PDF::setPaper('A4', 'portrait')
+        $pdf = Pdf::setPaper('A4', 'portrait')
         ->loadView('pdf.matricula',
-            compact('data', 'usuario', 'matriculas', 'cuotas', 'institucion')
+            compact( 'usuario', 'matriculas', 'cuotas', 'institucion')
         );
-        return $pdf->stream('matricula' . $matricula->ma_codigo . '.pdf');
+        return $pdf->download('matricula' . $matricula->ma_codigo . '.pdf');
     }
 
     public function generarPdfMatriculaTicket(ItMatricula $matricula, User $user, Request $request)
@@ -95,6 +89,6 @@ class MatriculaController extends Controller
             compact('data', 'usuario', 'matriculas', 'cuotas', 'institucion')
         );
         
-        return $pdf->stream('matricula' . $matricula->ma_codigo . '.pdf');
+        return $pdf->download('matricula' . $matricula->ma_codigo . '.pdf');
     }
 }

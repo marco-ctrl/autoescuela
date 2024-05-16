@@ -57,6 +57,7 @@ final class StoreMatriculaPOSTController extends Controller
                 'es_codigo' => $matricula->es_codigo,
                 'ye_codigo' => 1,
                 'pg_cuotas' => 1,
+                'pr_codigo' => 1,
                 'pg_created' => now()->format('Y-m-d H:s:i'),
                 'pg_updated' => now()->format('Y-m-d H:s:i'),
                 'us_codigo' => auth()->user()->us_codigo,

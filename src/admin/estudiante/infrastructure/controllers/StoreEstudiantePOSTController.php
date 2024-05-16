@@ -56,15 +56,13 @@ final class StoreEstudiantePOSTController extends Controller
                 'es_celular' => $request->es_celular,
                 'es_direccion' => strtoupper($request->es_direccion),
                 'es_foto' => $request->es_foto,
-                'es_tipodocumento' => 1,
+                'es_tipodocumento' => $request->es_tipodocumento,
                 'es_estado' => 1,
                 'us_codigo' => $usuario->us_codigo,
                 'es_created' => now()->format('Y-m-d h:m:s'),
                 'es_observacion' => $request->es_observacion,
                 'us_codigo_create' => auth()->user()->us_codigo,
             ]);
-
-            //event(new UsuarioCreadoEvent($estudiante, $password, 'Estudiante'));
 
             return response()->json([
                 'status' => true,

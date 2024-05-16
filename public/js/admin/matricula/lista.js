@@ -1,8 +1,8 @@
 $(document).ready(function () {
     const user = JSON.parse(localStorage.getItem('user'));
-    const BASEURL = '/autoescuela/public/api';
-    const URLHORARIO = '/autoescuela/public/admin/horario-matricula/';
-    const URLPDF = '/autoescuela/public/api/pdf/';
+    const BASEURL = window.apiUrl + '/api';
+    const URLHORARIO = window.apiUrl + '/admin/horario-matricula/';
+    const URLPDF = window.apiUrl + '/api/pdf/';
 
     var codigoMatricula = 0;
 
@@ -79,7 +79,7 @@ $(document).ready(function () {
 
     function cargarTablaMatricula(matricula) {
         let html = `<tr>
-                        <td><img src="${matricula.foto}" width="40" class="img-profile rounded-circle"></td>
+                        <td><img src="${matricula.foto}" class="img-perfil-tabla"></td>
                         <td>${matricula.nro_kardex}</td>
                         <td>${matricula.fecha_inscripcion}</td>
                         <td>${matricula.documento}</td>
@@ -95,6 +95,7 @@ $(document).ready(function () {
                         <td>${matricula.cancelado}</td>
                         <td>${matricula.saldo}</td>
                         <td>${matricula.fecha_inicio}</td>
+                        <td>${matricula.fecha_evaluacion}</td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -102,7 +103,12 @@ $(document).ready(function () {
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="${URLHORARIO}${matricula.id}"><i class="fas fa-calendar-alt"></i> Horario Matricula</a>
-                                    <a class="dropdown-item evaluacion" href="#" data-codigo="${matricula.id}" data-matricula="${matricula.nro_matricula}"><i class="fas fa-calendar-alt"></i> Evaluacion</a>
+                                    <a class="dropdown-item evaluacion" href="#" 
+                                        data-codigo="${matricula.id}" 
+                                        data-matricula="${matricula.nro_matricula}"
+                                        data-evaluacion="${matricula.fecha_evaluacion}"
+                                        data-sede_evaluacion="${matricula.sede_evaluacion}"
+                                    ><i class="fas fa-calendar-alt"></i> Evaluacion</a>
                                     <a class="dropdown-item" href="${URLPDF}kardex/${matricula.id}/${user.us_codigo}" target="_blank"><i class="fas fa-file-alt"></i> kardex</a>
                                     <a class="dropdown-item" href="${URLPDF}matricula/${matricula.id}/${user.us_codigo}/A4" target="_blank"><i class="fas fa-file-alt"></i> PDF A4</a>
                                     <a class="dropdown-item" href="${URLPDF}matricula/${matricula.id}/${user.us_codigo}/ticket" target="_blank"><i class="fas fa-file-alt"></i> PDF ticket</a>
@@ -117,7 +123,8 @@ $(document).ready(function () {
         e.preventDefault();
         codigoMatricula = $(this).data('codigo');
         let matricula = $(this).data('matricula');
-        
+        $('#fecha').val($(this).data('evaluacion'));
+        $('#sede').val($(this).data('sede_evaluacion'));
         $('#modalEvaluacionTitle').html('Evaluacion de Matricula: ' + matricula);
         $('#modalEvaluacion').modal('show');
     });

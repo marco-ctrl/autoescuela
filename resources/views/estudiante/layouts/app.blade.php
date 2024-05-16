@@ -27,7 +27,7 @@
 
 </head>
 
-<body id="page-top">
+<body id="page-top" style="visibility: hidden">
     <div id="overlay">
         <div id="spinner"></div>
     </div>
@@ -46,7 +46,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                @include('estudiante.components.navbar')
+                @include('components.navbar')
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -59,7 +59,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            @include('estudiante.components.footer')
+            @include('components.footer')
             <!-- End of Footer -->
 
         </div>
@@ -74,7 +74,7 @@
     </a>
 
     <!-- Logout Modal-->
-    @include('admin.components.logout-modal')
+    @include('components.logout-modal')
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
@@ -85,8 +85,9 @@
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     <!-- Custom scripts for all pages-->
+    <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-    <script src="{{ asset('js/admin/index.js') }}"></script>
+    <script src="{{ asset('js/estudiante/index.js') }}"></script>
     <script src="{{ asset('js/auth/login.js')}}"></script>
     <script src="{{ asset('vendor/alertifyjs/alertify.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>

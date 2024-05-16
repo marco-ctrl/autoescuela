@@ -55,6 +55,20 @@
         </div>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCaja"
+            aria-expanded="true" aria-controls="collapseCaja">
+            <i class="fas fa-cash-register"></i>
+            <span>Caja</span>
+        </a>
+        <div id="collapseCaja" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('admin.caja.pagos.create') }}"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
+            </div>
+        </div>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 

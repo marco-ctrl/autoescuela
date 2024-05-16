@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
-    const baseUrl = "/autoescuela/public/api";
+    const baseUrl = window.apiUrl + "/api";
 
     var horasClases = [];
     var horasOcupadas = [];

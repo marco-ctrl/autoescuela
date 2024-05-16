@@ -15,18 +15,19 @@
                             <th>NRO KARDEX</th>
                             <th>FECHA DE INSCRIPCION</th>
                             <th>DOCUMENTO CI</th>
-                            <th>EXPEDICION</th>
+                            <th>EXP.</th>
                             <th>NOMBRES</th>
                             <th>APELLIDO PATERNO</th>
                             <th>APELLIDO MATERNO</th>
                             <th>USUARIO</th>
-                            <th>CATEGORIA</th>
+                            <th>CAT.</th>
                             <th>SEDE</th>
                             <th>CURSO</th>
                             <th>COSTO</th>
-                            <th>CANCELADO</th>
+                            <th>CANC.</th>
                             <th>SALDO</th>
                             <th>FECHA INICIO</th>
+                            <th>FECHA EVALUACION</th>
                             <th>ACCION</th>
                         </tr>
                     </thead>

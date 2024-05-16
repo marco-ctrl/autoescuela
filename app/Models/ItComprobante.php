@@ -10,7 +10,7 @@ class ItComprobante extends Model
     use HasFactory;
 
     protected $table = 'it_comprobante';
-    protected $primaryKey = 'co_codigo';
-    public $guarded = ['co_codigo'];
+    protected $primaryKey = 'cb_codigo';
+    public $guarded = ['cb_codigo'];
     public $timestamps = false;
 }

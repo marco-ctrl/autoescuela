@@ -1,9 +1,5 @@
 $(document).ready(function () {
-    const URL = (ruta) => {
-        var baseurl = window.location.origin;
-        return baseurl+'/'+ruta;
-    }
-    const BASEURL = '/autoescuela/public/api';
+    const BASEURL = window.apiUrl+'/api';
     const token = localStorage.getItem('token');
 
     $('.estudiante').autocomplete({

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Views\Admin\CajaController;
 use App\Http\Controllers\Views\Admin\EstudianteController;
 use App\Http\Controllers\Views\Admin\HomeController;
 use App\Http\Controllers\Views\Admin\HorarioMatriculaController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\Views\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -21,4 +22,6 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/estudiante', [EstudianteController::class, 'index'])->name('admin.estudiante.index');
     Route::get('/estudiante/create', [EstudianteController::class, 'create'])->name('admin.estudiante.create');
+
+    Route::get('/pagos', [CajaController::class, 'pagos'])->name('admin.caja.pagos.create');
 });

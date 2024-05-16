@@ -28,11 +28,23 @@ class AuthController extends Controller
             //Aquí se genera el token de autenticación para el usuario
             $token = $user->createToken('API Token')->plainTextToken;
 
+            if($user->us_tipo == 0){
+                $usuario = User::with('estudiante')->where('us_codigo', $user->us_codigo)->first();
+            }
+
+            if($user->us_tipo == 1){
+                $usuario = User::with('docente')->where('us_codigo', $user->us_codigo)->first();
+            }
+
+            if($user->us_tipo == 2 || $user->us_tipo == 3){
+                $usuario = User::with('trabajador')->where('us_codigo', $user->us_codigo)->first();
+            }
+
             return response()->json([
                 'status' => true,
                 'message' => __('User logged in successfully'),
                 'token' => $token,
-                'user' => $user
+                'user' => $usuario,
             ], Response::HTTP_OK);
         } catch (\Exception $ex) {
             return response()->json([

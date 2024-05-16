@@ -3,12 +3,20 @@
 namespace App\Http\Controllers\Views\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\DashboardAdmin;
 
 class HomeController extends Controller
 {
+    public $dashboardAdmin;
+
+    public function __construct(DashboardAdmin $dashboardAdmin){
+        $this->dashboardAdmin = $dashboardAdmin;
+    }
+
     public function index()
     {
-        return view('admin.index');
+        //datos cards
+        $cards = $this->dashboardAdmin->getData();
+        return view('admin.index', compact('cards'));
     }
 }

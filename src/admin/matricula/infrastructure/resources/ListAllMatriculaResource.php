@@ -64,11 +64,13 @@ class ListAllMatriculaResource extends JsonResource
             'curso' => $this->curso->cu_descripcion,
             'costo' => $this->ma_costo_total,
             'duracion' => $this->ma_duracion_curso,
+            //'fecha_evaluacion' => Carbon::parse($this->ma_fecha_evaluacion)->format('Y/m/d H:s'),
             'fecha_evaluacion' => $this->ma_fecha_evaluacion,
             'cancelado' => $this->ma_costo_total - $numero_redondeado,
             'saldo' => $numero_formateado,
             'fecha_inicio' => FechaInicioClases::fechaInicio($this->ma_codigo),
-            'detalle' => $detalle
+            'detalle' => $detalle,
+            'sede_evaluacion' => $this->ma_sede_evaluacion,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PDF\CredencialesEstudianteController;
+use App\Http\Controllers\PDF\Docente\ReporteGeneralController;
 use App\Http\Controllers\PDF\KardexController;
 use App\Http\Controllers\PDF\MatriculaController;
 use Illuminate\Http\Request;
@@ -23,4 +24,7 @@ Route::prefix('pdf')->group(function () {
     Route::get('/matricula/{matricula}/{user}/ticket', [MatriculaController::class, 'generarPdfMatriculaTicket']);
 
     Route::get('/credenciales-estudiante/{estudiante}/{usuario}', [CredencialesEstudianteController::class, 'generarCredenciales']);
+    Route::post('/docente/reporte-general', [ReporteGeneralController::class, 'index'])->name('docente.pdf.reporte-general');
+    //Route::get('/docente/reporte-general', [ReporteGeneralController::class, 'index']);
+
 });

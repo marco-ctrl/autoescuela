@@ -31,6 +31,19 @@
             <i class="fas fa-list"></i>
             <span> Asistencia</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdministracion"
+            aria-expanded="true" aria-controls="collapseAdministracion">
+            <i class="fas fa-archive"></i>
+            <span>Reportes</span>
+        </a>
+        <div id="collapseAdministracion" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('docente.reporte-general') }}"><i class="far fa-file-pdf"></i> Reporte General</a>
+            </div>
+        </div>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">

@@ -52,7 +52,33 @@
             </ul>
         </nav>
     </div>
+
+    <div class="modal fade" id="modalEditarEstudiante" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Estudiante</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="formEstudiante" autocomplete="off">
+                        <div class="row">
+                            @include('admin.estudiante._partials.form')
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btn-siguiente" type="button" class="btn btn-secondary apagar" data-dismiss="modal"
+                                style="display: none;"><i class="fas fa-chevron-right"></i> Siguiente</button>
+                            <button id="btnGuardar" type="button" class="btn btn-primary apagar"><i
+                                    class="fas fa-save"></i> Guardar</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{ asset('js/admin/estudiante/lista.js') }}"></script>
+    <script src="{{ asset('js/admin/capturar_foto.js') }}"></script>
 @endsection

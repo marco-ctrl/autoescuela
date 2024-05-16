@@ -86,7 +86,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-
+    <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/auth/login.js') }}"></script>
 
 </body>

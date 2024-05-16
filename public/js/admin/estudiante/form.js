@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const TOKEN = localStorage.getItem('token');
-    const BASEURL = '/autoescuela/public/api';
+    const BASEURL = window.apiUrl + '/api';
 
     var es_documento = document.getElementById('es_documento');
     var es_expedicion = document.getElementById('es_expedicion');

@@ -54,4 +54,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(ItTrabajador::class, 'us_codigo', 'us_codigo');
     }
+
+    public function estudiante(): HasOne
+    {
+        return $this->hasOne(ItEstudiante::class, 'us_codigo', 'us_codigo');
+    }
+
+    public function docente(): HasOne
+    {
+        return $this->hasOne(ItDocente::class, 'us_codigo', 'us_codigo');
+    }
 }

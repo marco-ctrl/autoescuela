@@ -5,6 +5,7 @@ use Src\admin\estudiante\infrastructure\controllers\AutoCompleteEstudianteGETCon
 use Src\admin\estudiante\infrastructure\controllers\ListAllEstudianteGETController;
 use Src\admin\estudiante\infrastructure\controllers\ShowEstudianteGETController;
 use Src\admin\estudiante\infrastructure\controllers\StoreEstudiantePOSTController;
+use Src\admin\estudiante\infrastructure\controllers\UpdateEstudiantePUTController;
 
 Route::prefix('admin_estudiante')->group(function () {
     Route::group([
@@ -14,5 +15,6 @@ Route::prefix('admin_estudiante')->group(function () {
         Route::get('/{estudiante}/show', [ShowEstudianteGETController::class, 'index']);
         Route::get('/autocomplete', [AutoCompleteEstudianteGETController::class, 'index']);
         Route::post('/', [StoreEstudiantePOSTController::class, 'index']);
+        Route::put('/{estudiante}', [UpdateEstudiantePUTController::class, 'index']);
     });
 });
