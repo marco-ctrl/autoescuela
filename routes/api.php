@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\PDF\Caja\PagarDocenteController;
 use App\Http\Controllers\PDF\CredencialesEstudianteController;
 use App\Http\Controllers\PDF\Docente\ReporteGeneralController;
 use App\Http\Controllers\PDF\KardexController;
@@ -26,5 +27,7 @@ Route::prefix('pdf')->group(function () {
     Route::get('/credenciales-estudiante/{estudiante}/{usuario}', [CredencialesEstudianteController::class, 'generarCredenciales']);
     Route::post('/docente/reporte-general', [ReporteGeneralController::class, 'index'])->name('docente.pdf.reporte-general');
     //Route::get('/docente/reporte-general', [ReporteGeneralController::class, 'index']);
+    Route::get('/pago-docente/{pagoDocente}', [PagarDocenteController::class, 'index']);
+    Route::get('/pago-docente/{pagoDocente}/ticket', [PagarDocenteController::class, 'ticket']);
 
 });

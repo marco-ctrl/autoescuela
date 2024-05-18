@@ -47,7 +47,7 @@ class MatriculaController extends Controller
         ->loadView('pdf.matricula',
             compact( 'usuario', 'matriculas', 'cuotas', 'institucion')
         );
-        return $pdf->download('matricula' . $matricula->ma_codigo . '.pdf');
+        return $pdf->stream('matricula' . $matricula->ma_codigo . '.pdf');
     }
 
     public function generarPdfMatriculaTicket(ItMatricula $matricula, User $user, Request $request)
@@ -83,12 +83,12 @@ class MatriculaController extends Controller
 
         $institucion = ItInstitucion::first();
 
-        $pdf = Pdf::setPaper([35,0,226.772456,1210], 'portrait');
+        $pdf = Pdf::setPaper([35,-10,226.772456,1210], 'portrait');
         $pdf->setOption(['margin_left' => 0]);
         $pdf->loadView('pdf.matriculaTicket',
             compact('data', 'usuario', 'matriculas', 'cuotas', 'institucion')
         );
         
-        return $pdf->download('matricula' . $matricula->ma_codigo . '.pdf');
+        return $pdf->stream('matricula' . $matricula->ma_codigo . '.pdf');
     }
 }

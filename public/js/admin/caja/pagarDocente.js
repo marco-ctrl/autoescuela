@@ -1,20 +1,19 @@
 $(document).ready(function () {
     const user = JSON.parse(localStorage.getItem("user"));
     const BASEURL = window.apiUrl + "/api";
-    const URLHORARIO = window.apiUrl + "/admin/horario-matricula/";
     const URLPDF = window.apiUrl + "/api/pdf/";
 
-    var codigoMatricula = 0;
+    var codigoDocente = 0;
 
     const token = localStorage.getItem("token");
 
-    loadMatriculas(1); // Cargar la primera página al cargar la página
+    loadDocentes(1); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
-    function loadMatriculas(page) {
+    function loadDocentes(page) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_pago/listar-matricula?page=" + page,
+            url: BASEURL + "/admin_docente/pago-docente?page=" + page,
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
@@ -24,14 +23,14 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#overlay").hide();
-                let data = response.data.filter(function (item) {
-                    return item.saldo > 0;
+                let data = response.data.filter(function(item){
+                    return item.horas_no_pagadas > 0;
                 });
-                $("#matriculaTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
-                $.each(data, function (index, matricula) {
+                $("#docenteTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
+                $.each(data, function (index, docente) {
                     // Agregar fila a la tabla con los datos de la cita
-                    $("#matriculaTable tbody").append(
-                        cargarTablaMatricula(matricula)
+                    $("#docenteTable tbody").append(
+                        cargarTablaDocente(docente)
                     );
                 });
 
@@ -97,31 +96,25 @@ $(document).ready(function () {
     $(document).on("click", "#paginationContainer a", function (e) {
         e.preventDefault();
         var page = $(this).attr("href").split("page=")[1];
-        loadMatriculas(page);
+        loadDocentes(page);
     });
 
-    function cargarTablaMatricula(matricula) {
-        let disabled = matricula.saldo == 0 ? "disabled" : "";
-
+    function cargarTablaDocente(docente) {
+        
         let html = `<tr>
-                        <td>${matricula.matricula}</td>
-                        <td>${matricula.documento}</td>
-                        <td>${matricula.estudiante}</td>
-                        <td>${matricula.usuario}</td>
-                        <td>${matricula.servicio}</td>
-                        <td>${matricula.costo}</td>
-                        <td>${matricula.inscripcion}</td>
-                        <td>${matricula.primera_cuota}</td>
-                        <td>${matricula.ultima_cuota}</td>
-                        <td>${matricula.cancelado}</td>
-                        <td>${matricula.saldo}</td>
+                        <td><img src="${docente.foto}" class="img-perfil-tabla"></td>
+                        <td>${docente.documento}</td>
+                        <td>${docente.docente}</td>
+                        <td>${docente.pago_hora}</td>
+                        <td>${docente.horas_pagadas}</td>
+                        <td>${docente.horas_no_pagadas}</td>
                         <td>
                             <button class="btn btn-success pago" 
-                                data-codigo="${matricula.id}" 
-                                data-matricula="${matricula.matricula}"
-                                title="pago cuota"
-                                ${disabled}
-                                >
+                                data-codigo="${docente.id}"
+                                data-docente="${docente.docente}"
+                                data-falta="${docente.horas_no_pagadas}"
+                                data-sueldo="${docente.pago_hora}"
+                                title="pago docente">
                                 <i class="fas fa-money-bill-wave"></i>
                             </button>
                         </td>
@@ -131,22 +124,25 @@ $(document).ready(function () {
 
     $(document).on("click", ".pago", function (e) {
         e.preventDefault();
-        codigoMatricula = $(this).data("codigo");
-        let matricula = $(this).data("matricula");
-        $("#modalPagoTitle").html("Pago de Cuota - Matricula: " + matricula);
+        codigoDocente = $(this).data("codigo");
+        let docente = $(this).data("docente");
+        
+        $("#modalPagoTitle").html("Pagar Hora - Docente: " + docente);
+        $("#faltaPagar").html("TOTAL HORAS FALTA<br><strong>PAGAR: " 
+            + $(this).data("falta") + " HORAS</strong>");
+        $("#sueldoHora").html(`SUELDO POR HORA: ${$(this).data("sueldo")}`)
+        $("#horas").attr('max', $(this).data("falta"));
         $("#modalPago").modal("show");
     });
 
-    $("#btnPago").click(function (e) {
+    $("#btnPagarDocente").click(function (e) {
         let data = {
-            codigo: codigoMatricula,
-            pc_monto: $("#pc_monto").val(),
-            pc_tipo: $("#pc_tipo").val(),
-            documento: $("#documento").val(),
+            codigo: codigoDocente,
+            horas_pago: $('#horas').val(),
         };
         $.ajax({
             type: "POST",
-            url: BASEURL + "/admin_pago",
+            url: BASEURL + "/admin_docente/pago-docente",
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token, // Pasar el token como parte de la cabecera de autorización
@@ -165,8 +161,8 @@ $(document).ready(function () {
                     alertify.set("notifier", "position", "top-right");
                     alertify.success("Pago realizado correctamente");
                     $("#formPago").trigger("reset");
-                    loadMatriculas(1);
-                    var url = `${URLPDF}matricula/${codigoMatricula}/${user.us_codigo}/ticket`;
+                    loadDocentes(1);
+                    var url = `${URLPDF}pago-docente/${response.data.pd_codigo}`;
 
                     // Abrir la nueva pestaña
                     window.open(url, "_blank");

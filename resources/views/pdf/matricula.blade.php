@@ -162,7 +162,7 @@
             <th>costo</th>
             <th>inicio</th>
             <th>cuota</th>
-            <th>pagado</th>
+            <th>pagado bs.</th>
         </tr>
         @foreach ($cuotas as $cuota)
             <tr>
@@ -175,6 +175,10 @@
                 <td>{{ $cuota->ct_importe }}</td>
             </tr>
         @endforeach
+        <tr>
+            <td colspan="6" style="text-align: right;">cancelado Bs</td>
+            <td>{{ $matriculas['cancelado'] }}</td>
+        </tr>
         <tr>
             <td colspan="6" style="text-align: right;">saldo Bs</td>
             <td>{{ $matriculas['saldo'] }}</td>

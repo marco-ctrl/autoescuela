@@ -64,7 +64,10 @@
         <div id="collapseCaja" class="collapse" aria-labelledby="headingUtilities"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('admin.caja.pagos.create') }}"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
+                <a class="collapse-item" href="{{ route('admin.caja.pagos.create') }}"><i class="fas fa-hand-holding-usd"></i> Pago Cuotas</a>
+                <a class="collapse-item" href="{{ route('admin.caja.pagar-docente.create') }}"><i class="fas fa-file-invoice-dollar"></i> Pagar Docente</a>
+                <a class="collapse-item" href="{{ route('admin.caja.ingresos.create') }}"><i class="fas fa-cash-register"></i> Ingresos</a>
+                <a class="collapse-item" href="{{ route('admin.caja.pagar-docente.create') }}"><i class="fas fa-money-bill"></i> Gastos</a>
             </div>
         </div>
     </li>

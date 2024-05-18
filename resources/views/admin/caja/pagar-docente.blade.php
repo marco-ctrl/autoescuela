@@ -3,29 +3,25 @@
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Pago Cuotas</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Pagar Docente</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover table-sm text-small" id="matriculaTable" width="100%"
+                <table class="table table-bordered table-hover text-center" id="docenteTable" width="100%"
                     cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
-                            <th>MATRICULA</th>
+                            <th>FOTO</th>
                             <th>DOCUMENTO</th>
-                            <th>ALUMNO</th>
-                            <th>USUARIO</th>
-                            <th>SERVICIO</th>
-                            <th>TOTAL BS.</th>
-                            <th>INSCRIPCION</th>
-                            <th>PRIMERA CUOTA</th>
-                            <th>ULTIMA CUOTA</th>
-                            <th>CANCELADO BS.</th>
-                            <th>SALDO BS.</th>
-                            <th>ESTADO</th>
+                            <th>NOMBRE</th>
+                            <th>PAGO HORA</th>
+                            <th>HORAS PAGADAS</th>
+                            <th>HORAS NO PAGADAS</th>
+                            <th>ACCION</th>
                         </tr>
                     </thead>
                     <tbody>
+                        
                     </tbody>
                 </table>
 
@@ -48,35 +44,24 @@
                     </button>
                   </div>
                 <div class="modal-body">
-                    <form id="formPago">
+                    <h3 class="text-center" id="faltaPagar"></h3>
+                    <h4 class="text-center" id="sueldoHora"></h4>
+                    <form id="formPago" class="mt-3">
                         <div class="form-group">
-                            <label for="documento">Documento</label>
-                            <select name="pc_tipo" id="documento" class="form-control">
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pc_tipo">Tipo de Pago</label>
-                            <select name="pc_tipo" id="pc_tipo" class="form-control">
-                                <option value="0">EFECTIVO</option>
-                                <option value="1">TRANSFERENCIA</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pc_monto">Monto</label>
-                            <input type="number" name="pc_monto" id="pc_monto" class="form-control">
+                            <label for="horas">Horas a Pagar</label>
+                            <input type="number" name="horas" id="horas" min="0" class="form-control" value="0dfcn">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btnPago">Pagar</button>
+                    <button type="button" class="btn btn-primary" id="btnPagarDocente">Pagar</button>
                 </div>
             </div>
         </div>
     </div>
 
 @endsection
-
 @section('scripts')
-    <script src="{{ asset('js/admin/caja/pagos.js') }}"></script>
+<script src="{{ asset('js/admin/caja/pagarDocente.js') }}"></script>
 @endsection

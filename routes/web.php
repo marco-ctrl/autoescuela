@@ -24,4 +24,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/estudiante/create', [EstudianteController::class, 'create'])->name('admin.estudiante.create');
 
     Route::get('/pagos', [CajaController::class, 'pagos'])->name('admin.caja.pagos.create');
+    Route::get('/pagar-docente', [CajaController::class, 'pagoDocentes'])->name('admin.caja.pagar-docente.create');
+    Route::get('/ingresos', [CajaController::class, 'ingresos'])->name('admin.caja.ingresos.create');
 });

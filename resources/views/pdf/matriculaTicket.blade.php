@@ -124,7 +124,7 @@
                     <td>{{ $matriculas['duracion'] }}</td>
                 </tr>
                 <tr>
-                    <th>costo</th>
+                    <th>costo bs.</th>
                     <td>{{ $matriculas['costo'] }}</td>
                 </tr>
                 <tr>
@@ -140,8 +140,12 @@
                     <td>{{ $cuota->ct_numero }}</td>
                 </tr>
                 <tr>
-                    <th>pagado</th>
+                    <th>pagado bs.</th>
                     <td>{{ $cuota->ct_importe }}</td>
+                </tr>
+                <tr>
+                    <th>cancelado bs.</th>
+                    <td>{{ $matriculas['cancelado'] }}</td>
                 </tr>
                 <tr>
                     <th>saldo Bs.</th>
@@ -252,7 +256,7 @@
                     <td>{{ $matriculas['duracion'] }}</td>
                 </tr>
                 <tr>
-                    <th>costo</th>
+                    <th>costo bs.</th>
                     <td>{{ $matriculas['costo'] }}</td>
                 </tr>
                 <tr>
@@ -268,8 +272,12 @@
                     <td>{{ $cuota->ct_numero }}</td>
                 </tr>
                 <tr>
-                    <th>pagado</th>
+                    <th>pagado bs.</th>
                     <td>{{ $cuota->ct_importe }}</td>
+                </tr>
+                <tr>
+                    <th>cancelado bs.</th>
+                    <td>{{ $matriculas['cancelado'] }}</td>
                 </tr>
                 <tr>
                     <th>saldo Bs.</th>

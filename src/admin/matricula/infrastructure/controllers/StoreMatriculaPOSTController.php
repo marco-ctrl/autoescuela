@@ -2,7 +2,9 @@
 
 namespace Src\admin\matricula\infrastructure\controllers;
 
+use App\Helpers\ObtenerCorrelativo;
 use App\Http\Controllers\Controller;
+use App\Models\ItComprobantePago;
 use App\Models\ItCuota;
 use App\Models\ItMatricula;
 use App\Models\ItPagoCuota;
@@ -19,13 +21,11 @@ final class StoreMatriculaPOSTController extends Controller
             $costoEvluacion = 0;
             $costoTotal = 0;
 
-            if($request->ma_evaluacion == "1")
-            {
+            if ($request->ma_evaluacion == "1") {
                 $costoEvluacion = $request->ma_costo_evaluacion;
                 $costoTotal = $request->ma_costo_curso + $request->ma_costo_evaluacion;
             }
-            if($request->ma_evaluacion == "0")
-            {
+            if ($request->ma_evaluacion == "0") {
                 $costoTotal = $request->ma_costo_curso;
             }
 
@@ -43,7 +43,7 @@ final class StoreMatriculaPOSTController extends Controller
                 'ma_evaluacion' => $request->ma_evaluacion,
                 'ma_costo_total' => $costoTotal,
                 'ma_duracion_curso' => $request->ma_duracion,
-                'us_codigo_create' => auth()->user()->us_codigo, 
+                'us_codigo_create' => auth()->user()->us_codigo,
             ]);
 
             if (!$matricula) {
@@ -97,7 +97,7 @@ final class StoreMatriculaPOSTController extends Controller
                 'pc_updated' => now()->format('Y-m-d H:i:s'),
                 'pc_estado' => 1,
                 'ct_codigo' => $cuota->ct_codigo,
-                'us_codigo' => auth()->user()->us_codigo
+                'us_codigo' => auth()->user()->us_codigo,
             ]);
 
             if (!$pagoCuota) {
@@ -106,6 +106,38 @@ final class StoreMatriculaPOSTController extends Controller
                     'message' => __('error al guardar pago cuota'),
                 ], Response::HTTP_NOT_FOUND);
             }
+
+            $data = [
+                'detalle' => [
+                    [
+                        'CodProducto' => '1',
+                        'Producto' => 'PAGO DE MATRICULA',
+                        'Cantidad' => '1',
+                        'Precio' => $matricula->ma_costo_total,
+                    ],
+                ],
+                'estudiante' => $matricula->estudiante->es_nombre . ' ' . $matricula->estudiante->es_apellido,
+                'codEstudiante' => $matricula->es_codigo,
+                'serie' => 'TC01',
+                'correlativo' => ObtenerCorrelativo::obtenerCorrelativoIngresos() + 1,
+                'tipo' => 'TICKET',
+            ];
+
+            $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE);
+
+            $comprobantePago = ItComprobantePago::create([
+                "cp_tipo" => 1,
+                "sr_codigo" => 1,
+                "cp_correlativo" => ObtenerCorrelativo::obtenerCorrelativoIngresos() + 1,
+                "cp_fecha_cobro" => date('Y-m-d H:i:s'),
+                "us_codigo" => auth()->user()->us_codigo,
+                "cp_tipo_pago" => 1,
+                "cp_pago" => $matricula->ma_costo_total,
+                "cp_estado" => 1,
+                "cp_created" => date('Y-m-d H:i:s'),
+                "cp_updated" => date('Y-m-d H:i:s'),
+                "cp_informacion" => $jsonData,
+            ]);
 
             return response()->json([
                 'status' => true,

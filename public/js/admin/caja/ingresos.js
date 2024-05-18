@@ -1,20 +1,19 @@
 $(document).ready(function () {
     const user = JSON.parse(localStorage.getItem("user"));
     const BASEURL = window.apiUrl + "/api";
-    const URLHORARIO = window.apiUrl + "/admin/horario-matricula/";
     const URLPDF = window.apiUrl + "/api/pdf/";
 
-    var codigoMatricula = 0;
+    var codigoingresos = 0;
 
     const token = localStorage.getItem("token");
-
-    loadMatriculas(1); // Cargar la primera página al cargar la página
+    
+    loadIngresos(1); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
-    function loadMatriculas(page) {
+    function loadIngresos(page) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_pago/listar-matricula?page=" + page,
+            url: BASEURL + "/admin_caja/ingresos?page=" + page,
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
@@ -24,14 +23,12 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#overlay").hide();
-                let data = response.data.filter(function (item) {
-                    return item.saldo > 0;
-                });
-                $("#matriculaTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
-                $.each(data, function (index, matricula) {
+                let data = response.data;
+                $("#ingresosTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
+                $.each(data, function (index, ingresos) {
                     // Agregar fila a la tabla con los datos de la cita
-                    $("#matriculaTable tbody").append(
-                        cargarTablaMatricula(matricula)
+                    $("#ingresosTable tbody").append(
+                        cargarTablaIngresos(ingresos)
                     );
                 });
 
@@ -97,28 +94,22 @@ $(document).ready(function () {
     $(document).on("click", "#paginationContainer a", function (e) {
         e.preventDefault();
         var page = $(this).attr("href").split("page=")[1];
-        loadMatriculas(page);
+        loadIngresos(1);(page);
     });
 
-    function cargarTablaMatricula(matricula) {
-        let disabled = matricula.saldo == 0 ? "disabled" : "";
+    function cargarTablaIngresos(ingresos) {
+        let disabled = ingresos.saldo == 0 ? "disabled" : "";
 
         let html = `<tr>
-                        <td>${matricula.matricula}</td>
-                        <td>${matricula.documento}</td>
-                        <td>${matricula.estudiante}</td>
-                        <td>${matricula.usuario}</td>
-                        <td>${matricula.servicio}</td>
-                        <td>${matricula.costo}</td>
-                        <td>${matricula.inscripcion}</td>
-                        <td>${matricula.primera_cuota}</td>
-                        <td>${matricula.ultima_cuota}</td>
-                        <td>${matricula.cancelado}</td>
-                        <td>${matricula.saldo}</td>
+                        <td>${ingresos.fecha}</td>
+                        <td>${ingresos.monto}</td>
+                        <td>${ingresos.detalle}</td>
+                        <td>${ingresos.usuario}</td>
+                        <td>${ingresos.estudiante}</td>
                         <td>
                             <button class="btn btn-success pago" 
-                                data-codigo="${matricula.id}" 
-                                data-matricula="${matricula.matricula}"
+                                data-codigo="${ingresos.id}" 
+                                data-ingresos="${ingresos.ingresos}"
                                 title="pago cuota"
                                 ${disabled}
                                 >
@@ -131,15 +122,15 @@ $(document).ready(function () {
 
     $(document).on("click", ".pago", function (e) {
         e.preventDefault();
-        codigoMatricula = $(this).data("codigo");
-        let matricula = $(this).data("matricula");
-        $("#modalPagoTitle").html("Pago de Cuota - Matricula: " + matricula);
+        codigoingresos = $(this).data("codigo");
+        let ingresos = $(this).data("ingresos");
+        $("#modalPagoTitle").html("Pago de Cuota - ingresos: " + ingresos);
         $("#modalPago").modal("show");
     });
 
     $("#btnPago").click(function (e) {
         let data = {
-            codigo: codigoMatricula,
+            codigo: codigoingresos,
             pc_monto: $("#pc_monto").val(),
             pc_tipo: $("#pc_tipo").val(),
             documento: $("#documento").val(),
@@ -165,8 +156,8 @@ $(document).ready(function () {
                     alertify.set("notifier", "position", "top-right");
                     alertify.success("Pago realizado correctamente");
                     $("#formPago").trigger("reset");
-                    loadMatriculas(1);
-                    var url = `${URLPDF}matricula/${codigoMatricula}/${user.us_codigo}/ticket`;
+                    loadIngresos(1);
+                    var url = `${URLPDF}ingresos/${codigoingresos}/${user.us_codigo}/ticket`;
 
                     // Abrir la nueva pestaña
                     window.open(url, "_blank");
@@ -194,37 +185,5 @@ $(document).ready(function () {
         });
     });
 
-    listarComprobante();
-
-    function listarComprobante() {
-        $.ajax({
-            url: BASEURL + "/admin_comprobante",
-            type: "get",
-            dataType: "json",
-            success: function (response) {
-                var select = $("#documento");
-
-                if (response.status) {
-                    $.each(response.data, function (i, item) {
-                        select.append(
-                            $("<option></option>")
-                                .attr("value", item.cb_descripcion)
-                                .text(item.cb_descripcion)
-                        );
-                    });
-                } else {
-                    console.log(
-                        "La respuesta del servidor no tiene un estado exitoso."
-                    );
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error(
-                    "Error al cargar los datos: ",
-                    textStatus,
-                    errorThrown
-                );
-            },
-        });
-    }
+    
 });

@@ -9,7 +9,7 @@ class ObtenerCorrelativo
     public static function obtenerCorrelativoIngresos(): int
     {
         $correlativo = ItComprobantePago::where('cp_tipo', 1)
-            ->whereOr('cp_tipo', 2)
+            ->orWhere('cp_tipo', 2)
             ->max('cp_correlativo');
 
         return $correlativo;

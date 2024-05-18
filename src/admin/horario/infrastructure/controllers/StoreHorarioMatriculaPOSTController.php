@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ItHorarioMatricula;
 use App\Models\ItMatricula;
 use App\Helpers\actualizarNumeroHorario;
+use App\Helpers\ObtenerCorrelativo;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Src\admin\horario\infrastructure\validators\StoreHorarioValidatorRequest;
@@ -21,12 +22,12 @@ final class StoreHorarioMatriculaPostController extends Controller
             $fechaHoraActual = new DateTime();
             $fechaHoraComparar = new DateTime($request->hm_fecha_inicio);
 
-            /*if ($fechaHoraComparar < $fechaHoraActual) {
+            if ($fechaHoraComparar < $fechaHoraActual) {
                 return response()->json([
                     'status' => false,
                     'message' => __('No se puede agregar una fecha anterior a la fecha actual'),
                 ], Response::HTTP_OK);    
-            }*/
+            }
 
             $fechaInicio = Carbon::parse($request->hm_fecha_inicio);
             $fechaFinal = $fechaInicio->addHour();

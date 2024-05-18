@@ -7,6 +7,7 @@ use App\Helpers\ObtenerInformacionPago;
 use App\Http\Controllers\Controller;
 use App\Models\ItComprobantePago;
 use App\Models\ItCuota;
+use App\Models\ItMatricula;
 use App\Models\ItPagoCuota;
 use App\Models\ItProgramacion;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,7 @@ final class StorePagoCuotaPOSTController extends Controller
     public function index(StorePagoCuotaPOSTRequest $request): JsonResponse
     {
         try {
+            $matricula = ItMatricula::find($request->codigo);
             $programacion = ItProgramacion::where('ma_codigo', $request->codigo)->first();
 
             if (!$programacion) {
@@ -26,6 +28,16 @@ final class StorePagoCuotaPOSTController extends Controller
                     'status' => false,
                     'message' => __('Programacion not found'),
                 ], Response::HTTP_NOT_FOUND);
+            }
+
+            $cancelado = ItCuota::where('pg_codigo', $programacion->pg_codigo)
+                ->sum('ct_importe');
+            
+            if(($cancelado + $request->pc_monto) > $matricula->ma_costo_total){
+                return response()->json([
+                    'status' => false,
+                    'message' => __('El monto a pagar excede el monto total de la matricula'),
+                ], Response::HTTP_OK);
             }
 
             $programacion->pg_cuotas = $programacion->pg_cuotas + 1;
@@ -93,7 +105,7 @@ final class StorePagoCuotaPOSTController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => __('Pago cuota created successfully'),
-                'data' => $comprobantePago,
+                //'data' => $comprobantePago,
             ]);
         } catch (\Exception $ex) {
             return response()->json([
