@@ -3,10 +3,10 @@
 namespace Src\admin\estudiante\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EstudianteResource;
 use App\Models\ItEstudiante;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Src\admin\estudiante\infrastructure\resources\ListAllEstudianteResource;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,12 +16,14 @@ final class ListAllEstudianteGETController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $term = $request->input('term');
+            $term = strtoupper($request->input('term'));
             $estudiante = ItEstudiante::query()
-                ->whereAny(
-                    ['es_nombre', 'es_apellido', 'es_documento'], 
-                    'LIKE', '%' . $term . '%'
-                )
+                ->where(function ($query) use ($term) {
+                    $query->where('es_nombre', 'LIKE', '%' . $term . '%')
+                        ->orWhere('es_apellido', 'LIKE', '%' . $term . '%')
+                        ->orWhere('es_documento', 'LIKE', '%' . $term . '%')
+                        ->orWhere(DB::raw("CONCAT(es_nombre, ' ', es_apellido)"), 'LIKE', '%' . $term . '%');
+                })
                 ->orderBy('es_codigo', 'Desc')
                 ->paginate(10);
             

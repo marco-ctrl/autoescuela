@@ -49,6 +49,9 @@ class ListHorarioMatriculaResource extends JsonResource
             'asistencia' => $this->hm_asistencia,
             'observacion' => $this->hm_observacion_asistencia,
             'numero' => $this->hm_numero,
+            'tema' => $this->hm_tema,
+            'nota' => $this->hm_nota,
+            'categoria' => $this->matricula->ma_categoria,
         ];
     }
 }

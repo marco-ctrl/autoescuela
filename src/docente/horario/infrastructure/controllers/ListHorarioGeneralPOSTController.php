@@ -24,6 +24,13 @@ final class ListHorarioGeneralPOSTController extends Controller
                 ->orderBy('hm_fecha_inicio', 'asc')
                 ->get();
 
+            if($horarioGeneral->count() == 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No se encontraron horarios para la fecha seleccionada',
+                ], Response::HTTP_OK);
+            }
+
             return response()->json([
                 'status' => true,
                 'data' => ListHorarioGeneralResource::collection($horarioGeneral),

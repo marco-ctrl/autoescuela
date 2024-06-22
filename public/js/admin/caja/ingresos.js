@@ -6,20 +6,39 @@ $(document).ready(function () {
     var codigoingresos = 0;
 
     const token = localStorage.getItem("token");
-    
-    loadIngresos(1); // Cargar la primera página al cargar la página
+
+    let timeout = null;
+
+    $("#buscarIngresos").on("keyup", function () {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+            let term = $("#buscarIngresos").val();
+            loadIngresos(1, term);
+        }, 2000);
+    });
+
+    $("#btnBuscarIngresos").click(function () {
+        let term = $("#buscarIngresos").val();
+        loadIngresos(1, term);
+    });
+
+    loadIngresos(1, ""); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
-    function loadIngresos(page) {
+    function loadIngresos(page, term) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_caja/ingresos?page=" + page,
+            url:
+                BASEURL + "/admin_caja/ingresos?page=" + page + "&term=" + term,
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
             },
             beforeSend: function () {
-                $("#overlay").show();
+                cargandoDatos();
             },
             success: function (response) {
                 $("#overlay").hide();
@@ -94,96 +113,47 @@ $(document).ready(function () {
     $(document).on("click", "#paginationContainer a", function (e) {
         e.preventDefault();
         var page = $(this).attr("href").split("page=")[1];
-        loadIngresos(1);(page);
+        loadIngresos(page, $("#buscarIngresos").val());
     });
 
-    function cargarTablaIngresos(ingresos) {
-        let disabled = ingresos.saldo == 0 ? "disabled" : "";
+    function cargandoDatos() {
+        $("#ingresosTable tbody").empty();
+        $("#ingresosTable tbody").append(
+            `<tr class="spinner-row">
+                    <td colspan="8" align="center">
+                        <div class="spinner-wrapper">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Cargando...</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`
+        );
+    }
 
+    function cargarTablaIngresos(ingresos, term) {
         let html = `<tr>
                         <td>${ingresos.fecha}</td>
+                        <td>${ingresos.documento}</td>
                         <td>${ingresos.monto}</td>
                         <td>${ingresos.detalle}</td>
                         <td>${ingresos.usuario}</td>
                         <td>${ingresos.estudiante}</td>
                         <td>
-                            <button class="btn btn-success pago" 
-                                data-codigo="${ingresos.id}" 
-                                data-ingresos="${ingresos.ingresos}"
-                                title="pago cuota"
-                                ${disabled}
-                                >
-                                <i class="fas fa-money-bill-wave"></i>
-                            </button>
+                        <a href="#" class="btn btn-success btn-sm pago"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante-render/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-ticket-alt"></i>
+                       </a>
+                        </td>
+                        <td>
+                        <a href="#" class="btn btn-primary btn-sm" title="Ver Comprobante"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-print"></i>
+                       </a>
                         </td>
                     </tr>`;
         return html;
     }
-
-    $(document).on("click", ".pago", function (e) {
-        e.preventDefault();
-        codigoingresos = $(this).data("codigo");
-        let ingresos = $(this).data("ingresos");
-        $("#modalPagoTitle").html("Pago de Cuota - ingresos: " + ingresos);
-        $("#modalPago").modal("show");
-    });
-
-    $("#btnPago").click(function (e) {
-        let data = {
-            codigo: codigoingresos,
-            pc_monto: $("#pc_monto").val(),
-            pc_tipo: $("#pc_tipo").val(),
-            documento: $("#documento").val(),
-        };
-        $.ajax({
-            type: "POST",
-            url: BASEURL + "/admin_pago",
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer " + token, // Pasar el token como parte de la cabecera de autorización
-            },
-            data: data,
-            beforeSend: function () {
-                $("#overlay").show();
-            },
-            complete: function () {
-                $("#overlay").hide();
-            },
-            success: function (response) {
-                $("#modalPago").modal("hide");
-
-                if (response.status) {
-                    alertify.set("notifier", "position", "top-right");
-                    alertify.success("Pago realizado correctamente");
-                    $("#formPago").trigger("reset");
-                    loadIngresos(1);
-                    var url = `${URLPDF}ingresos/${codigoingresos}/${user.us_codigo}/ticket`;
-
-                    // Abrir la nueva pestaña
-                    window.open(url, "_blank");
-                } else {
-                    alertify.set("notifier", "position", "top-right");
-                    alertify.error(response.message);
-                }
-            },
-            error: function (xhr) {
-                console.error("Error al enviar datos:", xhr.responseJSON);
-
-                $(".form-control").removeClass("is-invalid");
-                $(".invalid-feedback").remove();
-
-                $.each(xhr.responseJSON.errors, function (key, value) {
-                    var inputField = $("#" + key);
-                    inputField.addClass("is-invalid");
-
-                    var errorFeedback = $(
-                        '<div class="invalid-feedback"></div>'
-                    ).text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
-                    inputField.after(errorFeedback);
-                });
-            },
-        });
-    });
-
-    
 });

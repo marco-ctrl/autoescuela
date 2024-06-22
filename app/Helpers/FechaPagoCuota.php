@@ -27,4 +27,24 @@ class FechaPagoCuota
 
         return Carbon::parse($cuota[0]->ct_fecha_pago)->format('d/m/Y');
     }
+
+    public static function fechaPrimeraCuotaCertificado(int $codigo)
+    {
+        $programacion = ItProgramacion::where('pg_codigo', $codigo)->first();
+        $cuota = ItCuota::where('pg_codigo', $programacion->pg_codigo)
+            ->orderBy('ct_fecha_pago', 'asc')
+            ->get();
+
+        return Carbon::parse($cuota[0]->ct_fecha_pago)->format('d/m/Y');
+    }
+
+    public static function fechaUltimaCuotaCertificado(int $codigo)
+    {
+        $programacion = ItProgramacion::where('pg_codigo', $codigo)->first();
+        $cuota = ItCuota::where('pg_codigo', $programacion->pg_codigo)
+            ->orderBy('ct_fecha_pago', 'desc')
+            ->get();
+
+        return Carbon::parse($cuota[0]->ct_fecha_pago)->format('d/m/Y');
+    }
 }

@@ -25,4 +25,8 @@ class CajaController extends Controller
     {
         return view('admin.caja.ingresos');
     }
+
+    public function gastos() {
+        return view('admin.caja.gastos');
+    }
 }

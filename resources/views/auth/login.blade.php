@@ -37,9 +37,12 @@
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block"
-                                style="background: url({{ asset('img/Autoescuela-portada.jpg') }});
+                                style="background: url({{ asset('img/logo.png') }});
                                         background-position: center;
-                                        background-size: cover;">
+                                        background-size: contain;
+                                        background-repeat: no-repeat;
+                                        background-position: center"
+                                        >
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">

@@ -14,9 +14,11 @@ class AutoCompleteCursoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+       return [
             'id' => $this->cu_codigo,
             'value' => $this->cu_descripcion . ' - (' . $this->cu_costo . ' Bs.) - (' . $this->cu_duracion . ' Hrs.)',
+            'costo' => $this->cu_costo,
+            'duracion' => $this->cu_duracion,
         ];
     }
 }

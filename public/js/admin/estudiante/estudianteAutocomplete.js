@@ -1,6 +1,7 @@
 $(document).ready(function () {
     const BASEURL = window.apiUrl+'/api';
     const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
 
     $('.estudiante').autocomplete({
         source: function (request, response) {
@@ -143,9 +144,15 @@ $(document).ready(function () {
                     $('#es_codigo').val(estudiante.id);
                     $('#estudiante').val(estudiante.documento + ' - ' + estudiante.nombre + ' ' + estudiante.apellido);
                     $('#edad').val(estudiante.edad);
-                    $('#successModalEstudiante').modal('show');
+                    //$('#successModalEstudiante').modal('show');
                     
-                    $('#acceptBtnEstudiante').click(function () {
+                    url=`${BASEURL}/pdf/credenciales-estudiante/${estudiante.id}/${user.us_codigo}`;
+                    $("#pdfModalLabel").html("Credencial Estudiante");
+                    $('#pdfIframe').attr('src', url);
+                    $('#pdfModal').modal('show');
+                    
+                    $('.cerrar').click(function () {
+                        $('#pdfModal').modal('hide');
                         $('#modalRegistrarEstudiante').modal('hide');
                         cursoFocus();
                     });
@@ -220,7 +227,7 @@ $(document).ready(function () {
                 track.stop();
             });
             video.srcObject = null;
-            video.setAttribute('poster', "/autoescuela/public/img/user-default.png");
+            video.setAttribute('poster', "/img/user-default.png");
         }
     }
 

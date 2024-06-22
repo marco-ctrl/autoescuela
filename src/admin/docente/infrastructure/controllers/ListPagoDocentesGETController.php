@@ -5,15 +5,28 @@ namespace Src\admin\docente\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ItDocente;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Src\admin\docente\infrastructure\resources\PagoDocenteResource;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ListPagoDocentesGETController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $docente = ItDocente::paginate(10);
+            $term = $request->input('term');
+
+            $docente = ItDocente::query()
+            ->where(function ($query) use ($term) {
+                $query->where('do_nombre', 'LIKE', '%' . $term . '%')
+                    ->orWhere('do_apellido', 'LIKE', '%' . $term . '%')
+                    ->orWhere('do_documento', 'LIKE', '%' . $term . '%')
+                    ->orWhere(DB::raw("CONCAT(do_nombre, ' ', do_apellido)"), 'LIKE', '%' . $term . '%');
+            })
+            ->orderBy('do_codigo', 'Desc')
+            ->paginate(10);
+            
             $docenteData = PagoDocenteResource::collection($docente);
 
             $paginationData = $docente->toArray();

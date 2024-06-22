@@ -116,7 +116,8 @@
         <table>
             <thead>
                 <tr>
-                    <th colspan="11">{{ $datos[0]->titulo }}</th>
+                    <th colspan="11">{{ $datos != null ? $datos[0]->titulo : 'No se encontraron datos que mostrar' }}
+                    </th>
                 </tr>
                 <tr>
                     <th>HORA</th>
@@ -133,22 +134,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($datos as $item)
-                <tr>
-                    <td>{{ $item->hora }}</td>
-                    <td>{{ $item->matricula }}</td>
-                    <td style="color: {{ $item->textColor == 'text-red' ? 'red' : 'green' }}">{{ $item->saldo }}</td>
-                    <td>{{ $item->sede }}</td>
-                    <td>{{ $item->ci }}</td>
-                    <td>{{ $item->estudiante }}</td>
-                    <td>{{ $item->categoria }}</td>
-                    <td>{{ $item->curso }}</td>
-                    <td>{{ $item->numero }}</td>
-                    <td>{{ $item->observacion }}</td>
-                    <td>{{ $item->firma }}</td>
-                </tr>
-                    
-                @endforeach
+                @if ($datos != null)
+                    @foreach ($datos as $item)
+                        <tr>
+                            <td>{{ $item->hora }}</td>
+                            <td>{{ $item->matricula }}</td>
+                            <td style="color: {{ $item->textColor == 'text-danger' ? 'red' : 'green' }}">
+                                {{ $item->saldo }}</td>
+                            <td>{{ $item->sede }}</td>
+                            <td>{{ $item->ci }}</td>
+                            <td>{{ $item->estudiante }}</td>
+                            <td>{{ $item->categoria }}</td>
+                            <td>{{ $item->curso }}</td>
+                            <td>{{ $item->numero }}</td>
+                            <td>{{ $item->observacion }}</td>
+                            <td>{{ $item->firma }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="11">NO HAY DATOS DISPONIBLE QUE MOSTRAR</td>
+                    </tr>
+                @endif
+
             </tbody>
         </table>
     </main>

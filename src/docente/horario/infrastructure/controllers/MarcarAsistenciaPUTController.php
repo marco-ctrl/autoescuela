@@ -16,20 +16,35 @@ final class MarcarAsistenciaPUTController extends Controller
             $horarioMatricula = ItHorarioMatricula::find($horario->hm_codigo);
 
             $fechaHoraActual = new DateTime();
-            $fechaHoraComparar = new DateTime($horarioMatricula->hm_fecha_inicio);
+            $fechaHoraCompararInicio = new DateTime($horarioMatricula->hm_fecha_inicio);
+            $fechaHoraCompararFin = new DateTime($horarioMatricula->hm_fecha_final);
 
-            if ($fechaHoraComparar > $fechaHoraActual) {
+            // Validar que la fecha y hora actual se encuentre entre el horario de inicio y fin
+            
+            if ($fechaHoraCompararInicio > $fechaHoraActual) {
                 return response()->json([
                     'status' => false,
                     'message' => __('No se puede marcar asistencia porque el horario aun no comienza'),
                 ], Response::HTTP_OK);    
             }
 
+            if(auth()->user()->us_tipo != 3)
+            {
+                if ($fechaHoraCompararFin < $fechaHoraActual) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => __('No se puede marcar asistencia porque el horario ya finalizo'),
+                    ], Response::HTTP_OK);    
+                }   
+            }
+
             $horarioMatricula = ItHorarioMatricula::find($horario->hm_codigo)
                 ->update([
+                    'hm_tema' => strtoupper($request->tema),
+                    'hm_nota' => $request->nota,
                     'hm_asistencia' => $request->asistencia,
-                    'ma_observacion_asistencia' => $request->observacion,
-                    'hm_justificacion' => $request->justificacion,
+                    'ma_observacion_asistencia' => strtoupper($request->observacion),
+                    'hm_justificacion' => strtoupper($request->justificacion),
                 ]);
 
             return response()->json([

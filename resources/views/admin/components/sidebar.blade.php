@@ -1,11 +1,13 @@
-<ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <!--<i class="fas fa-laugh-wink"></i>-->
+            <img src="{{asset('img/logo.png')}}" style="width: 70px;
+                    height: auto;"/>
         </div>
-        <div class="sidebar-brand-text mx-3">Autescuela</div>
+        <div class="sidebar-brand-text mx-3">CCTP - AROMA CENTRAL</div>
     </a>
 
     <!-- Divider -->
@@ -14,8 +16,9 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
         <a class="nav-link" href="{{ route('admin.home')}}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Inicio</span></a>
+            <i class="fas fa-chart-line"></i>
+            <span>Inicio</span>
+        </a>
     </li>
 
     <!-- Divider -->
@@ -37,6 +40,21 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('admin.matriculas.create') }}"><i class="fas fa-edit"></i> Registrar</a>
                 <a class="collapse-item" href="{{ route('admin.matriculas.index') }}"><i class="fas fa-list"></i> Matriculados</a>
+            </div>
+        </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServicio"
+            aria-expanded="true" aria-controls="collapseServicio">
+            <i class="fas fa-folder-open"></i>
+            <span>Servicios</span>
+        </a>
+        <div id="collapseServicio" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('admin.registro.servicios.index') }}"><i class="fas fa-edit"></i> Servicios Registrados</a>
+                <a class="collapse-item" href="{{ route('admin.registro.servicios.create') }}"><i class="fas fa-th-list"></i> servicios</a>
             </div>
         </div>
     </li>
@@ -67,7 +85,26 @@
                 <a class="collapse-item" href="{{ route('admin.caja.pagos.create') }}"><i class="fas fa-hand-holding-usd"></i> Pago Cuotas</a>
                 <a class="collapse-item" href="{{ route('admin.caja.pagar-docente.create') }}"><i class="fas fa-file-invoice-dollar"></i> Pagar Docente</a>
                 <a class="collapse-item" href="{{ route('admin.caja.ingresos.create') }}"><i class="fas fa-cash-register"></i> Ingresos</a>
-                <a class="collapse-item" href="{{ route('admin.caja.pagar-docente.create') }}"><i class="fas fa-money-bill"></i> Gastos</a>
+                <a class="collapse-item" href="{{ route('admin.caja.egresos') }}"><i class="fas fa-money-bill"></i> Gastos</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes"
+            aria-expanded="true" aria-controls="collapseReportes">
+            <i class="fas fa-folder-open"></i>
+            <span>Reportes</span>
+        </a>
+        <div id="collapseReportes" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('admin.reportes.reporte-general') }}"><i class="fas fa-file-pdf"></i> Reporte General</a>
+                <a class="collapse-item" href="{{ route('admin.reportes.resumen-ingresos-egresos') }}"><i class="fas fa-file-pdf"></i> Ingresos Egresos</a>
+                <a class="collapse-item" href="{{ route('admin.reportes.cronograma-resumen') }}"><i class="fas fa-file-pdf"></i> Cronograma Resumen</a>
+                <a class="collapse-item" href="{{ route('admin.reportes.exportar-comprobante') }}"><i class="fas fa-file-pdf"></i> Exportar Comprobante</a>
+                <a class="collapse-item" href="{{ route('admin.reportes.matriculados') }}"><i class="fas fa-file-pdf"></i> Reporte Matriculados</a>
+                <a class="collapse-item" href="{{ route('admin.reportes.historial-estudiante') }}"><i class="fas fa-file-pdf"></i> Historial Estudiante</a>
             </div>
         </div>
     </li>

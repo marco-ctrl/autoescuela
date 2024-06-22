@@ -43,6 +43,46 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'sede1' => [
+            'driver' => 'mysql',
+            'url' => env('SEDE_ONE_DATABASE_URL'),
+            'host' => env('SEDE_ONE_DB_HOST', '127.0.0.1'),
+            'port' => env('SEDE_ONE_DB_PORT', '3306'),
+            'database' => env('SEDE_ONE_DB_DATABASE', 'forge'),
+            'username' => env('SEDE_ONE_DB_USERNAME', 'forge'),
+            'password' => env('SEDE_ONE_DB_PASSWORD', ''),
+            'unix_socket' => env('SEDE_ONE_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'sede2' => [
+            'driver' => 'mysql',
+            'url' => env('SEDE_SECOND_DB_DATABASE_URL'),
+            'host' => env('SEDE_SECOND_DB_HOST', '127.0.0.1'),
+            'port' => env('SEDE_SECOND_DB_PORT', '3306'),
+            'database' => env('SEDE_SECOND_DB_DATABASE', 'forge'),
+            'username' => env('SEDE_SECOND_DB_USERNAME', 'forge'),
+            'password' => env('SEDE_SECOND_DB_PASSWORD', ''),
+            'unix_socket' => env('SEDE_SECOND_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

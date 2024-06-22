@@ -7,13 +7,18 @@ $(document).ready(function () {
 
     const token = localStorage.getItem("token");
 
-    loadDocentes(1); // Cargar la primera página al cargar la página
+    $("#btnBuscarDocente").click(function () {
+        let term = $("#buscarDocente").val();
+        loadDocentes(1, term);
+    });
+
+    loadDocentes(1, ''); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
-    function loadDocentes(page) {
+    function loadDocentes(page, term) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_docente/pago-docente?page=" + page,
+            url: BASEURL + "/admin_docente/pago-docente?page=" + page + "&term=" + term,
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
@@ -96,7 +101,7 @@ $(document).ready(function () {
     $(document).on("click", "#paginationContainer a", function (e) {
         e.preventDefault();
         var page = $(this).attr("href").split("page=")[1];
-        loadDocentes(page);
+        loadDocentes(page, $('#buscarDocente').val());
     });
 
     function cargarTablaDocente(docente) {
@@ -161,11 +166,13 @@ $(document).ready(function () {
                     alertify.set("notifier", "position", "top-right");
                     alertify.success("Pago realizado correctamente");
                     $("#formPago").trigger("reset");
-                    loadDocentes(1);
+                    loadDocentes(1, $("#buscarDocente").val());
                     var url = `${URLPDF}pago-docente/${response.data.pd_codigo}`;
 
                     // Abrir la nueva pestaña
-                    window.open(url, "_blank");
+                    //window.open(url, "_blank");
+                    $('#pdfIframe').attr('src', url);
+                    $('#pdfModal').modal('show');
                 } else {
                     alertify.set("notifier", "position", "top-right");
                     alertify.error(response.message);

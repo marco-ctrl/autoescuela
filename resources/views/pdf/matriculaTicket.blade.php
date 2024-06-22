@@ -7,6 +7,10 @@
     <title>Comprobante</title>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: Arial, sans-serif;
             font-size: 9px;
@@ -16,7 +20,7 @@
         }
 
         #contenedor {
-            width: 70mm;
+            width: 80mm;
             /* Ancho del papel en rollo (en mm) */
             margin: 0;
         }
@@ -24,6 +28,7 @@
         #encabezado {
             text-align: center;
             margin-bottom: 10px;
+            margin-top: 20px;
         }
 
         #informacion {
@@ -33,6 +38,24 @@
         .detalle {
             border-collapse: collapse;
             width: 100%;
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+
+        .detalle th,
+        .detalle td {
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .acuerdo td {
+            text-align: center;
+        }
+
+        #pie {
+            text-align: center;
+            margin-top: 10px;
+            padding-bottom: 20px
         }
 
         .detalle th,

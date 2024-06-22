@@ -7,12 +7,13 @@ use App\Models\ItDocente;
 use App\Models\ItHorarioMatricula;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Src\docente\horario\infrastructure\resources\ListHorarioAsistenciaResource;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ListHorarioAsistenciaGETController extends Controller { 
 
- public function index(User $usuario): JsonResponse { 
+ public function index(User $usuario, Request $request): JsonResponse { 
     try {
         $docente = ItDocente::where('us_codigo', $usuario->us_codigo)->first();
         $horarioAsistencia = ItHorarioMatricula::with('docente', 'matricula.estudiante')

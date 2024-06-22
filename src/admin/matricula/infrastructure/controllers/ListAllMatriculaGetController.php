@@ -3,22 +3,35 @@
 namespace Src\admin\matricula\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
-//use App\Http\Resources\Admin\MatriculaResource;
 use App\Models\ItMatricula;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Src\admin\matricula\infrastructure\resources\ListAllMatriculaResource;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ListAllMatriculaGetController extends Controller
 {
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $matriculas = ItMatricula::with('usuario.trabajador')
-            ->orderBy('ma_codigo', 'desc')
-            ->paginate(8);
-            
+            $term = $request->input('term'); // Asumiendo que el término de búsqueda se obtiene del request
+
+            $matriculas = ItMatricula::with('usuario.trabajador', 'estudiante', 'programacion.cuota')
+                ->join('it_estudiante', 'it_matricula.es_codigo', '=', 'it_estudiante.es_codigo')
+                ->where(function ($query) use ($term) {
+                    $query->where('it_estudiante.es_nombre', 'LIKE', '%' . $term . '%')
+                        ->orWhere('it_estudiante.es_apellido', 'LIKE', '%' . $term . '%')
+                        ->orWhere('it_estudiante.es_documento', 'LIKE', '%' . $term . '%')
+                        ->orWhere(DB::raw("CONCAT(TRIM(it_estudiante.es_nombre), ' ', TRIM(it_estudiante.es_apellido))"), 'LIKE', '%' . $term . '%');
+                })
+                ->orderBy('it_matricula.ma_codigo', 'desc')
+                ->paginate(8, ['it_matricula.*']); // Asegurarse de seleccionar los campos correctos de la tabla principal
+            //dd($matriculas[0]->programacion);
+
+            $matriculas->load('usuario.trabajador', 'estudiante');
+
             $matriculasResource = ListAllMatriculaResource::collection($matriculas);
 
             $paginationData = $matriculas->toArray();
@@ -40,7 +53,6 @@ final class ListAllMatriculaGetController extends Controller
                 'data' => $matriculasResource,
                 'pagination' => $pagination,
             ], Response::HTTP_OK);
-            //return $matriculasResource->response()->setStatusCode(200);
         } catch (\Exception $ex) {
             return response()->json([
                 'status' => false,

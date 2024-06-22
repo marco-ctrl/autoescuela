@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
     const baseUrl = window.apiUrl + "/api";
+    const user = JSON.parse(localStorage.getItem("user"));
 
     var horasClases = [];
     var horasOcupadas = [];
@@ -29,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
             agregarHorario(fechaFormateada);
         },
         eventContent: function (arg) {
-            let estudiante = arg.event.extendedProps.estudiante
-            if (estudiante === undefined) {
+            let asistencia = arg.event.extendedProps.asistencia
+            if (asistencia === undefined) {
                 return {
                     html: `<div class="fc-content" id="event-${arg.event.id}">
                         <div class="fc-time">
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           <span class="${arg.event.extendedProps.bgColor} span-horas" style="left: 0;">${arg.event.extendedProps.comentario}</span>
                         </div>
                         <div class="fc-title">
-                        ${arg.event.extendedProps.curso} <br> ${arg.event.extendedProps.estudiante} 
+                        ${arg.event.extendedProps.curso} - Cat.: ${arg.event.extendedProps.categoria} <br> ${arg.event.extendedProps.estudiante} 
                         </div>
                       </div>`,
                 };
@@ -65,11 +66,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     $('#justificacion').prop('disabled', false);
                 }
                 // Mostrar modal con detalles del evento
-                $('#estudiante').val(info.event.extendedProps.estudiante);
-                $('#curso').val(info.event.extendedProps.curso);
+                $('#estudiante').html(info.event.extendedProps.estudiante);
+                $('#tema').val(info.event.extendedProps.tema);
+                $('#nota').val(info.event.extendedProps.nota);
+                $('#curso').html(info.event.extendedProps.curso);
+                $('#categoria').html(info.event.extendedProps.categoria);
                 $('#codigo').val(info.event.id);
                 $('#observacion').val(info.event.extendedProps.observacion);
                 $('#modalAsistencia').modal('show');
+            }
+            else{
+                $('#modalAsistencia').modal('hide');
+                $('#docenteOcupado').html(info.event.extendedProps.docente);
+                $('#estudianteOcupado').html(info.event.extendedProps.estudiante);
+                $('#cursoOcupado').html(info.event.extendedProps.curso);
+                $('#categoriaOcupado').html(info.event.extendedProps.categoria);
+                $('#modalOcupado').modal('show');
             }
         },
         selectConstraint: "businessHours", // Restringe la selección a las horas hábiles
@@ -267,8 +279,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 numero: evento.numero,
                 estudiante: evento.estudiante,
                 curso: evento.curso,
+                tema: evento.tema,
+                nota: evento.nota,
                 comentario: evento.asistencia == 0 ? 'F' :'A',
                 bgColor: evento.asistencia == 0 ? 'bg-danger' : 'bg-success',
+                categoria: evento.categoria,
             });
         });
     }
@@ -288,6 +303,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 success: function (resp) {
                     response(resp.data); // Envía los datos al widget Autocomplete
                 },
+                error: function (xhr, status, error) {
+                    console.error(
+                        "Error al obtener los docentes:",
+                        xhr.responseJSON
+                    );
+                }
             });
         },
         select: function (event, ui) {
@@ -327,6 +348,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function marcarAsistencia() {
         var data = {
+            tema: $('#tema').val(),
+            nota: $('#nota').val(),
             asistencia: $('#asistencia').val(),
             justificacion: $('#justificacion').val(),
             observacion: $('#observacion').val(),
@@ -346,13 +369,14 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             complete: function () {
                 $('#overlay').hide();
-                $('#modalAsistencia').modal('hide');
                 listarHorarios();
             },
             success: function (response) {
                 if (response.status) {
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success(response.message);
+                    $('#modalAsistencia').modal('hide');
+                    $('#formHorario')[0].reset();
                 }
                 else {
                     alertify.set('notifier', 'position', 'top-right');
@@ -378,4 +402,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    
+    $("#btn-imprimir").click(function (e) {
+        e.preventDefault();
+        //$("#usuario").val(user.us_codigo);
+        //$("#formImprimir").submit();
+        let ma_codigo = $("#ma_codigo").val();
+        let usuario = user.us_codigo;
+        url = `/public/api/pdf/kardes/horario-matricula/${ma_codigo}/${usuario}`;
+        $("#pdfModalLabel").html("Horarios");
+        $("#pdfIframe").attr("src", url);
+        $("#pdfModal").modal("show");
+    });
 });

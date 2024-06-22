@@ -55,38 +55,6 @@ class IngresosRepository
             'tipo' => 'TICKET',
         ];
 
-        $programacion = ItProgramacion::create([
-            'es_codigo' => $estudiante->es_codigo,
-            'ye_codigo' => 1,
-            'pg_cuotas' => 1,
-            'pr_codigo' => 1,
-            'pg_created' => now()->format('Y-m-d H:s:i'),
-            'pg_updated' => now()->format('Y-m-d H:s:i'),
-            'us_codigo' => auth()->user()->us_codigo,
-            'pg_estado' => 1,
-        ]);
-
-        $cuota = ItCuota::create([
-            'pg_codigo' => $programacion->pg_codigo,
-            'ct_numero' => 1,
-            'ct_importe' => $importe,
-            'ct_fecha_pago' => now()->format('Y-m-d'),
-            'ct_estado' => 1,
-            'ct_created' => now()->format('Y-m-d'),
-            'ct_updated' => now()->format('Y-m-d'),
-        ]);
-
-        $pagoCuota = ItPagoCuota::create([
-            'pc_tipo' => 0,
-            'pc_monto' => $cuota->ct_importe,
-            'pc_recurso' => null,
-            'pc_created' => now()->format('Y-m-d H:i:s'),
-            'pc_updated' => now()->format('Y-m-d H:i:s'),
-            'pc_estado' => 1,
-            'ct_codigo' => $cuota->ct_codigo,
-            'us_codigo' => auth()->user()->us_codigo,
-        ]);
-
         $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE);
 
         $comprobantePago = ItComprobantePago::create([

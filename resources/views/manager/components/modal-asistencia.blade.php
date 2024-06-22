@@ -16,6 +16,12 @@
                                 <label for="curso">Curso</label>
                                 <input type="text" id="curso" class="form-control" readonly>
                             </div>
+                            <div>
+                                <div class="form-group">
+                                    <label for="tema">Tema</label>
+                                    <input type="text" id="tema" class="form-control">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="asistencia">Asistencia
                                     <input type="checkbox" id="asistencia" class="form-control" value="0">
@@ -26,6 +32,12 @@
                             <div class="form-group">
                                 <label for="estudiante">Estudiante</label>
                                 <input type="text" id="estudiante" class="form-control" readonly>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label for="nota">Nota</label>
+                                    <input type="number" id="nota" class="form-control">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="justificacion">Justificacion</label>

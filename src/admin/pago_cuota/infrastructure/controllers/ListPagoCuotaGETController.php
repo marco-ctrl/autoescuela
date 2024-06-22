@@ -5,18 +5,31 @@ namespace Src\admin\pago_cuota\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ItMatricula;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Src\admin\pago_cuota\infrastructure\resources\ListPagoCuotaResource;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ListPagoCuotaGETController extends Controller
 {
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $matriculas = ItMatricula::with('usuario.trabajador')
-            ->orderBy('ma_codigo', 'desc')
-            ->paginate(8);
+            $term = $request->input('term'); // Asumiendo que el término de búsqueda se obtiene del request
+
+            $matriculas = ItMatricula::with('usuario.trabajador', 'estudiante')
+                ->join('it_estudiante', 'it_matricula.es_codigo', '=', 'it_estudiante.es_codigo')
+                ->where(function ($query) use ($term) {
+                    $query->where('it_estudiante.es_nombre', 'LIKE', '%' . $term . '%')
+                        ->orWhere('it_estudiante.es_apellido', 'LIKE', '%' . $term . '%')
+                        ->orWhere('it_estudiante.es_documento', 'LIKE', '%' . $term . '%')
+                        ->orWhere(DB::raw("CONCAT(TRIM(it_estudiante.es_nombre), ' ', TRIM(it_estudiante.es_apellido))"), 'LIKE', '%' . $term . '%');
+                })
+                ->orderBy('it_matricula.ma_codigo', 'desc')
+                ->paginate(8, ['it_matricula.*']); // Asegurarse de seleccionar los campos correctos de la tabla principal
+
+            $matriculas->load('usuario.trabajador', 'estudiante');
             
             $matriculasResource = ListPagoCuotaResource::collection($matriculas);
 

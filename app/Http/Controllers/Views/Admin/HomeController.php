@@ -17,6 +17,7 @@ class HomeController extends Controller
     {
         //datos cards
         $cards = $this->dashboardAdmin->getData();
+        //$pieGraphic = $this->dashboardAdmin->getDataPie();
         return view('admin.index', compact('cards'));
     }
 }

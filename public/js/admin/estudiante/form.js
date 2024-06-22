@@ -1,19 +1,20 @@
 $(document).ready(function () {
     const TOKEN = localStorage.getItem('token');
     const BASEURL = window.apiUrl + '/api';
+    const user = parseJson(localStorage.getItem('user'));
 
     var es_documento = document.getElementById('es_documento');
     var es_expedicion = document.getElementById('es_expedicion');
     var es_tipodocumento = document.getElementById('es_tipodocumento');
     var es_nombre = document.getElementById('es_nombre');
+    var ape_paterno = document.getElementById('ape_paterno');
+    var ape_materno = document.getElementById('ape_materno');
     var es_nacimiento = document.getElementById('es_nacimiento');
     var es_direccion = document.getElementById('es_direccion');
     var es_telefono = document.getElementById('es_celular');
     var es_correo = document.getElementById('es_correo');
     var es_observacion = document.getElementById('es_observacion');
     var es_foto = document.getElementById('es_foto');
-    var ape_paterno = document.getElementById('ape_paterno');
-    var ape_materno = document.getElementById('ape_materno');
 
     $('#formEstudiante').submit(function (e) {
         e.preventDefault();
@@ -21,13 +22,13 @@ $(document).ready(function () {
     });
 
     function agregarEstudiante() {
+        //console.log(es_documento.value);
         let es_genero = document.querySelector('input[name="es_genero"]:checked');
         var estudiante = {
             es_documento: es_documento.value,
             es_expedicion: es_expedicion.value,
             es_tipodocumento: es_tipodocumento.value,
             es_nombre: es_nombre.value,
-            es_apellido: es_apellido.value,
             es_nacimiento: es_nacimiento.value,
             es_genero: es_genero.value,
             es_direccion: es_direccion.value,
@@ -54,10 +55,25 @@ $(document).ready(function () {
                 $('#overlay').hide();
                 if (response.status) {
                     Apagar();
-                    $('#successModal').modal('show');
-                    $('#acceptBtn').click(function () {
-                        window.location.href = '/autoescuela/public/admin/estudiante';
+                    let estudiante = response.data;
+
+                    $('#es_codigo').val(estudiante.id);
+                    $('#estudiante').val(estudiante.documento + ' - ' + estudiante.nombre + ' ' + estudiante.apellido);
+                    $('#edad').val(estudiante.edad);
+                    //$('#successModalEstudiante').modal('show');
+                    
+                    url=`${BASEURL}/pdf/credenciales-estudiante/${estudiante.id}/${user.us_codigo}`;
+                    $("#pdfModalLabel").html("Credencial Estudiante");
+                    $('#pdfIframe').attr('src', url);
+                    $('#pdfModal').modal('show');
+                    
+                    $('.cerrar').click(function () {
+                        $('#pdfModal').modal('hide');
+                        $('#modalRegistrarEstudiante').modal('hide');
+                        cursoFocus();
                     });
+
+                    listarCategoria($('#edad').val());
                 }
             },
             error: function (xhr) {
@@ -86,7 +102,7 @@ $(document).ready(function () {
                 track.stop();
             });
             video.srcObject = null;
-            video.setAttribute('poster', "/autoescuela/public/img/user-default.png");
+            video.setAttribute('poster', "/img/user-default.png");
         }
     }
 });

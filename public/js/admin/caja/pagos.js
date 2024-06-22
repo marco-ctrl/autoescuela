@@ -8,13 +8,18 @@ $(document).ready(function () {
 
     const token = localStorage.getItem("token");
 
-    loadMatriculas(1); // Cargar la primera página al cargar la página
+    loadMatriculas(1, ''); // Cargar la primera página al cargar la página
+
+    $("#btnBuscarEstudiante").click(function () {
+        let term = $("#buscarEstudiante").val();
+        loadMatriculas(1, term);
+    });
 
     // Función para cargar los datos de las citas
-    function loadMatriculas(page) {
+    function loadMatriculas(page, term) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_pago/listar-matricula?page=" + page,
+            url: BASEURL + "/admin_pago/listar-matricula?page=" + page + "&term=" + term,
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
@@ -97,7 +102,7 @@ $(document).ready(function () {
     $(document).on("click", "#paginationContainer a", function (e) {
         e.preventDefault();
         var page = $(this).attr("href").split("page=")[1];
-        loadMatriculas(page);
+        loadMatriculas(page, $("#buscarEstudiante").val());
     });
 
     function cargarTablaMatricula(matricula) {
@@ -119,6 +124,7 @@ $(document).ready(function () {
                             <button class="btn btn-success pago" 
                                 data-codigo="${matricula.id}" 
                                 data-matricula="${matricula.matricula}"
+                                data-saldo="${matricula.saldo}"
                                 title="pago cuota"
                                 ${disabled}
                                 >
@@ -133,6 +139,8 @@ $(document).ready(function () {
         e.preventDefault();
         codigoMatricula = $(this).data("codigo");
         let matricula = $(this).data("matricula");
+        let saldo = $(this).data("saldo");
+        $("#saldoMatricula").html(saldo);
         $("#modalPagoTitle").html("Pago de Cuota - Matricula: " + matricula);
         $("#modalPago").modal("show");
     });
@@ -165,11 +173,13 @@ $(document).ready(function () {
                     alertify.set("notifier", "position", "top-right");
                     alertify.success("Pago realizado correctamente");
                     $("#formPago").trigger("reset");
-                    loadMatriculas(1);
+                    loadMatriculas(1, $('#buscarEstudiante').val());
                     var url = `${URLPDF}matricula/${codigoMatricula}/${user.us_codigo}/ticket`;
 
                     // Abrir la nueva pestaña
-                    window.open(url, "_blank");
+                    //window.open(url, "_blank");
+                    $('#pdfIframe').attr('src', url);
+                    $('#pdfModal').modal('show');
                 } else {
                     alertify.set("notifier", "position", "top-right");
                     alertify.error(response.message);

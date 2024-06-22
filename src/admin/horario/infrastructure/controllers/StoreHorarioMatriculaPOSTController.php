@@ -13,7 +13,7 @@ use Src\admin\horario\infrastructure\validators\StoreHorarioValidatorRequest;
 use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 
-final class StoreHorarioMatriculaPostController extends Controller
+final class StoreHorarioMatriculaPOSTController extends Controller
 {
 
     public function index(StoreHorarioValidatorRequest $request): JsonResponse

@@ -36,6 +36,7 @@ class MatriculaController extends Controller
 
         $horarioMatricula = ItHorarioMatricula::with('docente')
             ->where('ma_codigo', $matricula->ma_codigo)
+            ->orderBy('hm_fecha_inicio', 'asc')
             ->get();
 
         $horariosData = ListHorarioMatriculaResource::collection($horarioMatricula);
@@ -83,7 +84,7 @@ class MatriculaController extends Controller
 
         $institucion = ItInstitucion::first();
 
-        $pdf = Pdf::setPaper([35,-10,226.772456,1210], 'portrait');
+        $pdf = Pdf::setPaper([0,0,226.772456,1210], 'portrait');
         $pdf->setOption(['margin_left' => 0]);
         $pdf->loadView('pdf.matriculaTicket',
             compact('data', 'usuario', 'matriculas', 'cuotas', 'institucion')

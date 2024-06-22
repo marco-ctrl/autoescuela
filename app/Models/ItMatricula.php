@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ItMatricula extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
     protected $table = 'it_matricula';
     protected $primaryKey = 'ma_codigo';
     public $guarded = ['ma_codigo'];
@@ -44,4 +46,10 @@ class ItMatricula extends Model
     {
         return $this->belongsTo(User::class, 'us_codigo_create', 'us_codigo');
     }
+
+    public function programacion(): HasOne
+    {
+        return $this->hasOne(ItProgramacion::class, 'ma_codigo', 'ma_codigo');
+    }
+
 }

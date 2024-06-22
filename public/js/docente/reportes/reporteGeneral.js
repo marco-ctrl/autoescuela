@@ -4,25 +4,54 @@ $(document).ready(function () {
     const URLPDF = window.apiUrl + "/api/pdf";
     const token = localStorage.getItem("token");
 
-    $('#usuario').val(user.us_codigo);
+    $("#usuario").val(user.us_codigo);
     var estudiantes = [];
+
+    $("#docente").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: BASEURL + "/admin_docente/autocomplete",
+                dataType: "json",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + token,
+                },
+                data: {
+                    term: request.term, // envía el término de búsqueda al servidor
+                },
+                success: function (resp) {
+                    response(resp.data); // Envía los datos al widget Autocomplete
+                },
+                error: function (xhr, status, error) {
+                    console.error(
+                        "Error al obtener los docentes:",
+                        xhr.responseJSON
+                    );
+                }
+            });
+        },
+        select: function (event, ui) {
+            $("#do_codigo").val(ui.item.id);
+        },
+    });
 
     $("#btn-filtrar").click(function (e) {
         e.preventDefault();
-        ListarEstudiantes($("#fecha").val());
+        ListarEstudiantes($("#fecha").val(), user.docente.do_codigo);
     });
 
-    function ListarEstudiantes(fecha) {
+    function ListarEstudiantes(fecha, do_codigo) {
+        console.log(do_codigo, fecha);
         $.ajax({
             type: "POST",
-            url: BASEURL + "/docente_horario/reporte-general",
+            url: BASEURL + "/filtrar/reporte-general",
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
             },
             data: {
                 fecha: fecha,
-                codigo: user.us_codigo,
+                codigo: do_codigo,
             },
             beforeSend: function () {
                 $("#overlay").show();
@@ -31,15 +60,27 @@ $(document).ready(function () {
                 $("#overlay").hide();
             },
             success: function (response) {
-                estudiantes = response.data;
-                $('#datos').val(JSON.stringify(response.data));
-                $("#titulo-table").append(response.data[0].titulo);
-                $("#generalTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
-                $.each(response.data, function (index, matricula) {
+                if (response.status) {
+                    estudiantes = response.data;
+                    $("#datos").val(JSON.stringify(response.data));
+                    $("#titulo-table").append(response.data[0].titulo);
+                    $("#generalTable tbody").empty(); // Limpiar la tabla antes de cargar nuevos datos
+                    $.each(response.data, function (index, matricula) {
+                        $("#generalTable tbody").append(
+                            cargarTablaMatricula(matricula)
+                        );
+                    });
+                }
+                else{
+                    estudiantes = [];
+                    $("#datos").val(estudiantes);
+                    $("#generalTable tbody").empty();
                     $("#generalTable tbody").append(
-                        cargarTablaMatricula(matricula)
+                        `<tr>
+                            <td colspan="11">No hay datos disponibles</td>
+                        </tr>`
                     );
-                });
+                }
             },
             error: function (xhr, status, error) {
                 $("#overlay").hide();
@@ -66,44 +107,5 @@ $(document).ready(function () {
                         <td>${matricula.firma}</td>
                     </tr>`;
         return html;
-    }
-
-    /*$("#btn-pdf").click(function (e) {
-        generarPDF();
-    });*/
-
-    function generarPDF() {
-        //console.log(estudiantes);
-        $.ajax({
-            type: "GET",
-            url: URLPDF + "/docente/reporte-general",
-            headers: {
-                Accept: "application/pdf",
-                Authorization: "Bearer " + token,
-            },
-            data: {
-                datos: estudiantes,
-            },
-            beforeSend: function () {
-                $("#overlay").show();
-            },
-            complete: function () {
-                $("#overlay").hide();
-            },
-            success: function (response) {
-                $("#overlay").hide();
-                // Crear un objeto Blob a partir de la respuesta
-                var blob = new Blob([response], { type: 'application/pdf' });
-                // Crear una URL para el Blob
-                var blobURL = URL.createObjectURL(blob);
-                // Abrir el PDF en una nueva ventana
-                window.open(blobURL);
-            },
-            error: function (xhr, status, error) {
-                $("#overlay").hide();
-                console.error(xhr.responseJSON.message); // Manejar el error si la solicitud falla
-            },
-        });
-        
     }
 });

@@ -6,6 +6,22 @@
             <h6 class="m-0 font-weight-bold text-primary">Pago Cuotas</h6>
         </div>
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-auto">
+                    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" autocomplete="off">
+                        <div class="input-group">
+                            <input type="text" id="buscarEstudiante" class="form-control bg-light border-0 small" 
+                            placeholder="Buscar Estudiante..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button id="btnBuscarEstudiante" class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-sm text-small" id="matriculaTable" width="100%"
                     cellspacing="0">
@@ -20,7 +36,7 @@
                             <th>INSCRIPCION</th>
                             <th>PRIMERA CUOTA</th>
                             <th>ULTIMA CUOTA</th>
-                            <th>CANCELADO BS.</th>
+                            <th>CAN. BS.</th>
                             <th>SALDO BS.</th>
                             <th>ESTADO</th>
                         </tr>
@@ -38,38 +54,22 @@
         </nav>
     </div>
 
-    <div class="modal fade" id="modalPago" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    @include('components.modal-pago-cuota')
+
+    <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalPagoTitle"></h5>
+                    <h5 class="modal-title" id="pdfModalLabel">PDF de Credenciales del Estudiante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                  </div>
+                </div>
                 <div class="modal-body">
-                    <form id="formPago">
-                        <div class="form-group">
-                            <label for="documento">Documento</label>
-                            <select name="pc_tipo" id="documento" class="form-control">
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pc_tipo">Tipo de Pago</label>
-                            <select name="pc_tipo" id="pc_tipo" class="form-control">
-                                <option value="0">EFECTIVO</option>
-                                <option value="1">TRANSFERENCIA</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pc_monto">Monto</label>
-                            <input type="number" name="pc_monto" id="pc_monto" class="form-control">
-                        </div>
-                    </form>
+                    <iframe id="pdfIframe" width="100%" height="500px"></iframe>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btnPago">Pagar</button>
+                    <button type="button" id="btnCerrar" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>

@@ -6,8 +6,24 @@
             <h6 class="m-0 font-weight-bold text-primary">Lista de Matriculados</h6>
         </div>
         <div class="card-body">
+            <div class="mb-3 d-flex justify-content-between">
+                <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" autocomplete="off">
+                    <div class="input-group">
+                        <input type="text" id="buscarEstudiante" class="form-control bg-light border-0 small" placeholder="Buscar..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="btnBuscarEstudiante" class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <a href="{{ route('admin.matriculas.create') }}" class="btn btn-success mb-2" title="Agregar Estudiante"><i
+                        class="fas fa-plus"></i> Agregar</a>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered table-hover table-sm text-small" id="matriculaTable" width="100%"
+                <table class="table table-bordered table-hover table-sm 
+                text-small text-center" id="matriculaTable" width="100%"
                     cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
@@ -23,11 +39,15 @@
                             <th>CAT.</th>
                             <th>SEDE</th>
                             <th>CURSO</th>
+                            <th>NRO. CLASES</th>
+                            <th>COSTO CURSO</th>
+                            <th>COSTO EVA.</th>
                             <th>COSTO</th>
                             <th>CANC.</th>
                             <th>SALDO</th>
                             <th>FECHA INICIO</th>
                             <th>FECHA EVALUACION</th>
+                            <th>SEDE EVALUACION</th>
                             <th>ACCION</th>
                         </tr>
                     </thead>
@@ -55,6 +75,8 @@
                   </div>
                 <div class="modal-body">
                     <form id="formEvaluacion">
+                        <input type="hidden" name="estudiante" id="estudiante">
+                        <input type="hidden" name="categoria" id="categoria">
                         <div class="form-group">
                             <label for="fecha">Fecha</label>
                             <input type="datetime-local" name="fecha" id="fecha" class="form-control">
@@ -73,6 +95,11 @@
             </div>
         </div>
     </div>
+   @include('components.modal-pdf')
+    @include('components.modal-confirmacion')
+    @include('components.modal-agregar-evaluacion')
+    @include('components.modal-editar-matricula')
+    @include('components.modal-agregar-curso')
 
 @endsection
 

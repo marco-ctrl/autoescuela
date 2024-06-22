@@ -43,6 +43,17 @@ class ListAllMatriculaResource extends JsonResource
 
         $numero_matricula = NumeroMatricula::generar($this->ma_codigo);
 
+        $fecha_evaluacion = 'Sin Asignar';
+        if($this->ma_fecha_evaluacion != null){
+            $fecha_evaluacion = $this->ma_fecha_evaluacion;
+            $fecha_evaluacion = Carbon::parse($fecha_evaluacion)->format('d/m/Y H:i:s');
+        }
+
+        $curso = 'Sin Asignar';
+        if($this->curso){
+            $curso = $this->curso->cu_descripcion;
+        }
+
         return [
             'id' => $this->ma_codigo,
             'foto' => $this->estudiante->es_foto,
@@ -50,7 +61,7 @@ class ListAllMatriculaResource extends JsonResource
             'nro_matricula' => $numero_matricula,
             'fecha_inscripcion' => $fecha_inscripcion,
             'documento' => $this->estudiante->es_documento,
-            'expedicion' => $this->estudiante->es_expedicion,
+            'expedicion' => $this->estudiante->es_expedicion == null ? '' : $this->estudiante->es_expedicion,
             'nombres' => $this->estudiante->es_nombre,
             'apellidos' => $this->estudiante->es_apellido,
             'ape_paterno' => $apellidos['ape_paterno'],
@@ -61,16 +72,19 @@ class ListAllMatriculaResource extends JsonResource
             'usuario' => $usuario,
             'categoria' => $this->ma_categoria,
             'sede' => $this->sede->se_descripcion,
-            'curso' => $this->curso->cu_descripcion,
+            'curso' => $curso,
             'costo' => $this->ma_costo_total,
             'duracion' => $this->ma_duracion_curso,
-            //'fecha_evaluacion' => Carbon::parse($this->ma_fecha_evaluacion)->format('Y/m/d H:s'),
-            'fecha_evaluacion' => $this->ma_fecha_evaluacion,
+            'fecha_evaluacion' => $fecha_evaluacion,
             'cancelado' => $this->ma_costo_total - $numero_redondeado,
             'saldo' => $numero_formateado,
             'fecha_inicio' => FechaInicioClases::fechaInicio($this->ma_codigo),
             'detalle' => $detalle,
-            'sede_evaluacion' => $this->ma_sede_evaluacion,
+            'sede_evaluacion' => $this->ma_sede_evaluacion == null ? 'Sin Asignar' : $this->ma_sede_evaluacion,
+            'numero_cuotas' => $this->programacion->pg_cuotas,
+            'numClases' => $this->ma_duracion_curso,
+            'costo_curso' =>$this->ma_costo_curso,
+            'costo_evaluacion' => $this->ma_costo_evaluacion
         ];
     }
 }

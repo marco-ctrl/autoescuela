@@ -21,6 +21,9 @@ $(document).ready(function () {
                     if (response.user.us_tipo == 3) {
                         window.location.href = baseUrl + "/admin/home";
                     }
+                    if (response.user.us_tipo == 2) {
+                        window.location.href = baseUrl + "/manager/home";
+                    }
                     if (response.user.us_tipo == 1) {
                         console.log(response.user.us_tipo);
                         window.location.href = baseUrl + "/docente/home";

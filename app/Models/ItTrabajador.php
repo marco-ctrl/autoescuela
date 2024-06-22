@@ -15,8 +15,8 @@ class ItTrabajador extends Model
     public $guarded = ['tr_codigo'];
     public $timestamps = false;
 
-    public function itUsuario(): BelongsTo
+    public function usuario(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'us_codigo', 'id');
+        return $this->belongsTo(User::class, 'us_codigo', 'us_codigo');
     }
 }

@@ -17,7 +17,7 @@ final class StoreEgresosPOSTController extends Controller
             
             return response()->json([
                 'status' => true,
-                'message' => 'Ingreso creado correctamente',
+                'message' => 'Egresos registrado correctamente',
                 'data' => $egreso,
             ], Response::HTTP_CREATED); // Created
         }

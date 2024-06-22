@@ -17,7 +17,7 @@ class ListGetAllIngresosGETResources extends JsonResource
     public function toArray(Request $request): array
     {
         $informacion = ObtenerDetalles::obtenerInformacionIngresos($this->cp_codigo);
-
+        
         return [
             'id' => $this->cp_codigo,
             'fecha' => Carbon::parse($this->cp_fecha_cobro)->format('d/m/Y H:i:s'),
@@ -25,6 +25,7 @@ class ListGetAllIngresosGETResources extends JsonResource
             'detalle' => $informacion['detalles'],
             'usuario' => $this->usuario->trabajador->tr_nombre . ' ' . $this->usuario->trabajador->tr_apellido,
             'estudiante' => $informacion['estudiante'],
+            'documento' => $informacion['documento'],
         ];
     }
 }

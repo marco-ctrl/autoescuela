@@ -5,6 +5,8 @@ $(document).ready(function () {
     const BASEURL = window.apiUrl + '/api';
     const URLPDF = window.apiUrl + '/api/pdf/';
     const user = JSON.parse(localStorage.getItem('user'));
+    
+    console.log(user.us_codigo);
 
     var ma_duracion = document.getElementById('ma_duracion');
     var ma_costo_curso = document.getElementById('ma_costo_curso');
@@ -118,20 +120,26 @@ $(document).ready(function () {
 
     function asignarSaldo(cu_codigo) {
         $.ajax({
-            url: BASEURL + '/admin_curso/' + cu_codigo,
-            type: 'get',
-            dataType: 'json',
+            url: BASEURL + "/admin_curso/" + cu_codigo,
+            type: "get",
+            dataType: "json",
             success: function (response) {
                 console.log(response);
                 if (response.status) {
                     ma_costo_curso.value = response.data.cu_costo;
-                    ma_costo_evaluacion.value = response.data.cu_costo_evaluacion;
-                    saldo.value = ma_costo_curso.value;
-                    saldoInicial = ma_costo_curso.value;
+                    ma_costo_evaluacion.value =
+                        response.data.cu_costo_evaluacion;
+
                     ma_duracion.value = response.data.cu_duracion;
 
                     importe.disabled = false;
                     importe.value = 0;
+
+                    let costoCurso = parseFloat(ma_costo_curso.value) || 0;
+                    let costoEvaluacion =
+                        parseFloat(ma_costo_evaluacion.value) || 0;
+
+                    saldo.value = calcularSaldo(costoCurso, costoEvaluacion);
                     pagado.disabled = false;
                     ma_duracion.disabled = false;
                     ma_costo_curso.disabled = false;
@@ -140,174 +148,223 @@ $(document).ready(function () {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Error al cargar los datos: ', textStatus, errorThrown);
-            }
+                console.error(
+                    "Error al cargar los datos: ",
+                    textStatus,
+                    errorThrown
+                );
+            },
         });
     }
 
-    pagado.addEventListener('change', (e) => {
-        
-        let saldoTotal=0;
+   pagado.addEventListener("change", (e) => {
+        let costoCurso = parseFloat(ma_costo_curso.value) || 0;
+        let costoEvaluacion = parseFloat(ma_costo_evaluacion.value) || 0;
 
-        if(evaluacion.checked)
-        {
-            saldoTotal = (parseFloat(ma_costo_evaluacion.value) || 0 ) + (parseFloat(ma_costo_curso.value) || 0 );
-        }
-        else{
-            saldoTotal = parseFloat(ma_costo_curso.value) || 0;
-        }
-        
         if (e.target.checked) {
-            importe.value = saldoTotal;
+            importe.value = costoCurso + costoEvaluacion;
             importe.disabled = true;
-            saldo.value = '0';
+            saldo.value = "0";
             pagado.value = true;
         } else {
             importe.disabled = false;
-            saldo.value = saldoTotal;
-            importe.value = '0';
+            saldo.value = costoCurso + costoEvaluacion;
+            importe.value = "0";
             pagado.value = false;
         }
     });
 
-    evaluacion.addEventListener('change', (e) => {
+    evaluacion.addEventListener("change", (e) => {
+        let costoCurso = parseFloat(ma_costo_curso.value) || 0;
+        let costoEvaluacion = parseFloat(ma_costo_evaluacion.value) || 0;
+        let importeCalcular = parseFloat(importe.value) || 0;
+        let costoTotal = calcularSaldo(costoCurso, costoEvaluacion);
+        saldo.value = costoTotal - importeCalcular;
 
         if (e.target.checked) {
             ma_costo_evaluacion.disabled = false;
-            evaluacion.value = 1;
-            saldo.value = (parseFloat(ma_costo_curso.value) + parseFloat(ma_costo_evaluacion.value)) - (parseFloat(importe.value) || 0);
+            if (importe.disabled) {
+                importe.disabled = false;
+            }
+            if (pagado.disabled) {
+                pagado.disabled = false;
+            }
         } else {
             ma_costo_evaluacion.disabled = true;
-            evaluacion.value = 0;
-            saldo.value = parseFloat(ma_costo_curso.value) - (parseFloat(importe.value) || 0);
-        
         }
     });
 
-    importe.addEventListener('input', (e) => {
+    importe.addEventListener("input", (e) => {
         let importe = parseFloat(e.target.value) || 0;
-        calcularSaldo(importe);
-    });
+        let costoCurso = parseFloat(ma_costo_curso.value) || 0;
+        let costoEvaluacion = parseFloat(ma_costo_evaluacion.value) || 0;
 
-    ma_costo_curso.addEventListener('input', (e) => {
-        let ma_costo_curso = parseFloat(e.target.value) || 0;
+        let costoTotal = calcularSaldo(costoCurso, costoEvaluacion);
 
-        if(evaluacion.checked){
-            saldo.value = parseFloat(ma_costo_evaluacion.value) + parseFloat(ma_costo_curso);
-        }
-        else{
-            saldo.value = ma_costo_curso;
-        }
-        
-        saldoInicial = ma_costo_curso;
-        importe.value = '0';
-    });
-
-    ma_costo_evaluacion.addEventListener('input', (e) => {
-        let ma_costo_evaluacion = parseFloat(e.target.value) || 0;
-
-        if(evaluacion.checked){
-            saldo.value = parseFloat(ma_costo_evaluacion) + parseFloat(ma_costo_curso.value);
-        }
-    })
-
-    function calcularSaldo(importe) {
-        let saldoTotal = 0;
-        
-        if(evaluacion.checked)
-        {
-            saldoTotal =  parseFloat(ma_costo_evaluacion.value) + parseFloat(ma_costo_curso.value);
-        }
-        else
-        {
-            saldoTotal =  parseFloat(ma_costo_curso.value);
-        }
-
-        if(importe > saldoTotal){
-            importe = saldoTotal;
+        if (importe > costoTotal) {
+            importe = costoTotal;
             e.target.value = importe;
+            saldo.value = 0;
+        } else {
+            importe = e.target.value;
+            saldo.value = costoTotal - importe;
         }
+    });
 
-        if(evaluacion.checked){
-            saldo.value = saldoTotal - importe;
-        }
-        else{
-            saldo.value = parseFloat(ma_costo_curso.value) - importe;
-        }
-    }
+   ma_costo_curso.addEventListener("input", (e) => {
+        let costoCurso = parseFloat(e.target.value) || 0;
+        let costoEvaluacion = parseFloat(ma_costo_evaluacion.value) || 0;
 
-    $('#form').submit(function (event) {
-        event.preventDefault();
-        let saldo = 0;
-        if(evaluacion.value == 1){
-            saldo = parseFloat(ma_costo_evaluacion.value) + parseFloat(ma_costo_curso.value);
-        }
-        else {
-            saldo = parseFloat(ma_costo_curso.value);
-        }
-        var data = {
-            estudiante: $('#estudiante').val(),
-            curso: $('#curso').val(),
-            es_codigo: $('#es_codigo').val(),
-            cu_codigo: $('#cu_codigo').val(),
-            ma_costo_curso: $('#ma_costo_curso').val(),
-            ma_costo_evaluacion: $('#ma_costo_evaluacion').val(),
-            ma_duracion: $('#ma_duracion').val(),
-            salida: $('#salida').val(),
-            am_codigo: $('#am_codigo').val(),
-            se_codigo: $('#se_codigo').val(),
-            ma_categoria: $('#ma_categoria').val(),
-            ma_evaluacion: evaluacion.value,
-            importe: $('#importe').val(),
-            pagado: $('#pagado').is(':checked'),
-            saldo: $('#saldo').val(),
-            saldoTotal: saldo,
-            detalle_recojo: $('#detalle_recojo').val()
-        };
+        saldo.value = calcularSaldo(costoCurso, costoEvaluacion);
+    });
 
-        //console.log(data);
-        $.ajax({
-            type: 'POST',
-            url: BASEURL + '/admin_matricula/store',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token // Pasar el token como parte de la cabecera de autorizaciÃ³n
-            },
-            data: data,
-            beforeSend: function () {
-                $('#overlay').show();
-            },
-            complete: function () {
-                $('#overlay').hide();
-            },
-            success: function (response) {
-                if (response.status) {
-                    let matricula = response.data;
-                    console.log(matricula);
-                    $('#successModal').modal('show');
-                
-                    $('#pdfA4').attr('href', `${URLPDF}matricula/${matricula.ma_codigo}/${user.us_codigo}/A4`);
-                    $('#pdfTicket').attr('href', `${URLPDF}matricula/${matricula.ma_codigo}/${user.us_codigo}/ticket`);
-    
-                    $('#acceptBtn').click(function () {
-                        window.location.href = '/autoescuela/public/admin/horario-matricula/' + response.data.ma_codigo;
-                    });  
-                }
-            },
-            error: function (xhr) {
-                console.error('Error al enviar datos:', xhr.responseJSON);
+    ma_costo_evaluacion.addEventListener("input", (e) => {
+        let costoEvaluacion = parseFloat(e.target.value) || 0;
+        let costoCurso = parseFloat(ma_costo_curso.value) || 0;
 
-                $('.form-control').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
+        saldo.value = calcularSaldo(costoCurso, costoEvaluacion);
+    });
 
-                $.each(xhr.responseJSON.errors, function (key, value) {
-                    var inputField = $('#' + key);
-                    inputField.addClass('is-invalid');
-
-                    var errorFeedback = $('<div class="invalid-feedback"></div>').text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
-                    inputField.after(errorFeedback);
-                });
+    function calcularSaldo(costoCurso, costoEvaluacion) {
+        let costoTotal = 0;
+        if (evaluacion.checked) {
+            if ($("#curso").val() != "") {
+                costoTotal = costoCurso + costoEvaluacion;
+            } else {
+                costoTotal = costoEvaluacion;
             }
-        });
+        } else {
+            if ($("#curso").val() != "") {
+                costoTotal = costoCurso;
+            } else {
+                costoTotal = 0;
+            }
+        }
+
+        return costoTotal;
+    }
+    
+    $("#curso").on("input", function () {
+        if ($("#curso").val() == "") {
+            ma_costo_curso.value = "";
+            ma_duracion.value = "";
+            importe.value = "";
+
+            ma_costo_curso.disabled = true;
+            ma_duracion.disabled = true;
+
+            let costoEvaluacion = parseFloat(ma_costo_evaluacion.value) || 0;
+
+            saldo.value = calcularSaldo(0, costoEvaluacion);
+        }
+    });
+
+    $("#form").submit(function (event) {
+        event.preventDefault();
+        if (evaluacion.checked) {
+            evaluacion.value = 1;
+        } else {
+            evaluacion.value = 0;
+        }
+        if (evaluacion.value == 0 && $("#curso").val() == "") {
+            alertify.set("notifier", "position", "top-right");
+            alertify.error(
+                "Debe seleccionar un curso o evaluacion para poder registrar la matr¨ªcula"
+            );
+        } else {
+            var data = {
+                estudiante: $("#estudiante").val(),
+                curso: $("#curso").val(),
+                es_codigo: $("#es_codigo").val(),
+                cu_codigo: $("#cu_codigo").val(),
+                ma_costo_curso: $("#ma_costo_curso").val(),
+                ma_costo_evaluacion: $("#ma_costo_evaluacion").val(),
+                ma_duracion: $("#ma_duracion").val(),
+                salida: $("#salida").val(),
+                am_codigo: $("#am_codigo").val(),
+                se_codigo: $("#se_codigo").val(),
+                ma_categoria: $("#ma_categoria").val(),
+                ma_evaluacion: evaluacion.value,
+                importe: $("#importe").val(),
+                pagado: $("#pagado").is(":checked"),
+                saldo: saldo.value,
+                saldoTotal: saldo.value,
+                detalle_recojo: $("#detalle_recojo").val(),
+            };
+
+            //console.log(data);
+            $.ajax({
+                type: "POST",
+                url: BASEURL + "/admin_matricula/store",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + token, // Pasar el token como parte de la cabecera de autorizaci¨®n
+                },
+                data: data,
+                beforeSend: function () {
+                    $("#overlay").show();
+                },
+                complete: function () {
+                    $("#overlay").hide();
+                },
+                success: function (response) {
+                    if (response.status) {
+                        let matricula = response.data;
+                        console.log(matricula);
+                        $("#successModal").modal("show");
+
+                        $("#pdfA4").attr(
+                            "href",
+                            `${URLPDF}matricula/${matricula.ma_codigo}/${user.us_codigo}/A4`
+                        );
+                        $("#pdfTicket").attr(
+                            "href",
+                            `${URLPDF}matricula/${matricula.ma_codigo}/${user.us_codigo}/ticket`
+                        );
+
+                        let url = "";
+
+                        if (matricula.cu_codigo == null) {
+                            url = "/public/admin/matricula/";
+                            $("#acceptBtn").html(
+                                '<i class="fas fa-check-circle"></i> Aceptar'
+                            );
+                        } else {
+                            url =
+                                "/public/admin/horario-matricula/" +
+                                response.data.ma_codigo;
+                            $("#acceptBtn").html(
+                                '<i class="fas fa-calendar-plus"></i> Asignar Horario'
+                            );
+                        }
+                        
+                        console.log(url);
+
+                        $("#acceptBtn").click(function () {
+                            window.location.href = url;
+                        });
+                    } else {
+                        alertify.set("notifier", "position", "top-right");
+                        alertify.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error al enviar datos:", xhr.responseJSON);
+
+                    $(".form-control").removeClass("is-invalid");
+                    $(".invalid-feedback").remove();
+
+                    $.each(xhr.responseJSON.errors, function (key, value) {
+                        var inputField = $("#" + key);
+                        inputField.addClass("is-invalid");
+
+                        var errorFeedback = $(
+                            '<div class="invalid-feedback"></div>'
+                        ).text(value[0]); // Asume que quieres mostrar solo el primer mensaje de error
+                        inputField.after(errorFeedback);
+                    });
+                },
+            });
+        }
     });
 });

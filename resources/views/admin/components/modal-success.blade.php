@@ -12,7 +12,7 @@
                     <a href="#" id="pdfA4" class="btn btn-danger" target="_blank"><i class="fas fa-file-pdf"></i> PDF A4</a>
                     <a href="#" id="pdfTicket" class="btn btn-danger" target="_blank"><i class="fas fa-file-pdf"></i> PDF Ticket</a>
                 @endif
-                <button type="button" class="btn btn-primary" id="acceptBtn" data-dismiss="modal">{!! $iconBtn !!} {{ $btn }}</button>
+                <button type="button" class="btn btn-primary" id="acceptBtn" data-dismiss="modal"></button>
             </div>
         </div>
     </div>

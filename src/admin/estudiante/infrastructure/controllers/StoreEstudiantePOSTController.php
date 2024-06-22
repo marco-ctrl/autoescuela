@@ -45,11 +45,13 @@ final class StoreEstudiantePOSTController extends Controller
                 ], Response::HTTP_BAD_REQUEST);
             }
 
+            $apellido = strtoupper($request->ape_paterno) . ' ' . strtoupper($request->ape_materno);
+
             $estudiante = ItEstudiante::create([
                 'es_documento' => $request->es_documento,
                 'es_expedicion' => strtoupper($request->es_expedicion),
                 'es_nombre' => strtoupper($request->es_nombre),
-                'es_apellido' => strtoupper($request->ape_paterno) . ' ' . strtoupper($request->ape_materno),
+                'es_apellido' => trim($apellido),
                 'es_correo' => $correo,
                 'es_nacimiento' => $request->es_nacimiento,
                 'es_genero' => $request->es_genero,

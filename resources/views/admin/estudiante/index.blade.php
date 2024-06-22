@@ -6,25 +6,26 @@
             <h6 class="m-0 font-weight-bold text-primary">Lista de Estudiantes</h6>
         </div>
         <div class="card-body">
-            <form class="form-row">
-                <div class="col-auto">
-                    <div class="input-group mb-2">
-                        <input type="search" class="form-control" id="buscar" aria-label="Search" aria-describedby="basic-addon2" placeholder="Buscar...">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><i class="fas fa-search"></i></div>
+            <div class="mb-3 d-flex justify-content-between">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                    autocomplete="off">
+                    <div class="input-group">
+                        <input type="text" id="buscarEstudiante" class="form-control bg-light border-0 small"
+                            placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="btnBuscarEstudiante" class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-auto">
-                    <a href="{{ route('admin.estudiante.create') }}" 
-                    class="btn btn-success mb-2" title="Agregar Estudiante"><i
-                        class="fas fa-plus"></i></a>
-                </div>
-            </form>
-
+                </form>
+                <a href="{{ route('admin.estudiante.create') }}" class="btn btn-success mb-2" title="Agregar Estudiante"><i
+                        class="fas fa-plus"></i> Agregar</a>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered table-hover table-sm text-small" id="estudianteTable" width="100%"
-                    cellspacing="0">
+
+                <table class="table table-bordered table-hover table-sm text-small text-center" id="estudianteTable"
+                    width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th>FOTO</th>
@@ -40,13 +41,14 @@
                             <th colspan="2">ACCION</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tbodyEstudiante">
                     </tbody>
                 </table>
 
             </div>
         </div>
         <nav>
+
             <ul id="paginationContainer" class="pagination justify-content-center flex-wrap">
                 <!-- La paginación se mostrará aquí -->
             </ul>
@@ -66,8 +68,8 @@
                             @include('admin.estudiante._partials.form')
                         </div>
                         <div class="modal-footer">
-                            <button id="btn-siguiente" type="button" class="btn btn-secondary apagar" data-dismiss="modal"
-                                style="display: none;"><i class="fas fa-chevron-right"></i> Siguiente</button>
+                            <button type="button" class="btn btn-danger apagar" data-dismiss="modal">
+                                <i class="fas fa-times-circle"></i> Cancelar</button>
                             <button id="btnGuardar" type="button" class="btn btn-primary apagar"><i
                                     class="fas fa-save"></i> Guardar</button>
                         </div>
@@ -77,6 +79,7 @@
             </div>
         </div>
     </div>
+    @include('components.modal-pdf')
 @endsection
 @section('scripts')
     <script src="{{ asset('js/admin/estudiante/lista.js') }}"></script>

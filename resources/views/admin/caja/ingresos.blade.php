@@ -7,8 +7,21 @@
         </div>
         <div class="card-body">
             <div class="mb-3 d-flex justify-content-between">
-                <button class="btn btn-primary" id="btnNuevoIngreso" data-toggle="modal" data-target="#modalIngresos">Nuevo
-                    Ingreso <i class="fas fa-plus"></i></button>
+                <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" autocomplete="off">
+                    <div class="input-group">
+                        <input type="text" id="buscarIngresos" class="form-control bg-light border-0 small" 
+                        placeholder="Buscar..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="btnBuscarIngresos" class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn btn-success btn-sm" id="btnNuevoIngreso" data-toggle="modal" data-target="#modalIngresos">
+                    <i class="fas fa-plus"></i> Agregar
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center table-sm text-small" id="ingresosTable" width="100%"
@@ -16,11 +29,12 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>FECHA</th>
+                            <th>DOCUMENTO</th>
                             <th>MONTO BS.</th>
                             <th>DETALLE</th>
                             <th>USUARIO</th>
                             <th>ESTUDIANTE</th>
-                            <th>OPCIONES</th>
+                            <th colspan="2">OPCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,10 +65,11 @@
             </div>
         </div>
     </div>
-
+    @include('components.modal-pdf')
 @endsection
 
 @section('scripts')
     <script src="{{ asset('js/admin/caja/ingresos.js') }}"></script>
     <script src="{{ asset('js/admin/caja/formIngresos.js') }}"></script>
+    <script src="{{ asset('js/pdfModal.js')}}"></script>
 @endsection

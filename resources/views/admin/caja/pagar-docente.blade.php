@@ -6,6 +6,22 @@
             <h6 class="m-0 font-weight-bold text-primary">Pagar Docente</h6>
         </div>
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-auto">
+                    <form class="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" autocomplete="off">
+                        <div class="input-group">
+                            <input type="text" id="buscarDocente" class="form-control bg-light border-0 small" 
+                            placeholder="Buscar Docente..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button id="btnBuscarDocente" class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center" id="docenteTable" width="100%"
                     cellspacing="0">
@@ -60,8 +76,9 @@
             </div>
         </div>
     </div>
-
+    @include('components.modal-pdf')
 @endsection
 @section('scripts')
 <script src="{{ asset('js/admin/caja/pagarDocente.js') }}"></script>
+<script src="{{ asset('js/pdfModal.js')}}"></script>
 @endsection

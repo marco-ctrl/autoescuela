@@ -1,6 +1,7 @@
 $(document).ready(function () {
     const BASEURL = window.apiUrl + "/api";
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
     var costoTotal = 0;
     // Añadir detalle a la tabla
@@ -149,8 +150,13 @@ $(document).ready(function () {
                     $("#estudiante").val("");
                     $("#detallesTableBody").empty();
                     actualizarSumatoriaTotal();
-                    loadIngresos(1);
+                    loadIngresos(1, );
                     $("#modalIngresos").modal("hide");
+
+                    url=`${BASEURL}/pdf/comprobante-render/${response.data.cp_codigo}/${user.us_codigo}`;
+                    $("#pdfModalLabel").html("Comprobante de Ingreso");
+                    $('#pdfIframe').attr('src', url);
+                    $('#pdfModal').modal('show');
                 }
             },
             error: function (xhr) {
@@ -179,19 +185,19 @@ $(document).ready(function () {
         $("#modalIngresos").modal("hide");
     });
 
-    loadIngresos(1); // Cargar la primera página al cargar la página
+    //loadIngresos(1); // Cargar la primera página al cargar la página
 
     // Función para cargar los datos de las citas
     function loadIngresos(page) {
         $.ajax({
             type: "GET",
-            url: BASEURL + "/admin_caja/ingresos?page=" + page,
+            url: BASEURL + "/admin_caja/ingresos?page=" + page + "&term=",
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer " + token,
             },
             beforeSend: function () {
-                $("#overlay").show();
+                cargandoDatos();
             },
             success: function (response) {
                 $("#overlay").hide();
@@ -200,7 +206,7 @@ $(document).ready(function () {
                 $.each(data, function (index, ingresos) {
                     // Agregar fila a la tabla con los datos de la cita
                     $("#ingresosTable tbody").append(
-                        cargarTablaIngresos(ingresos)
+                        cargarTablaIngresos(ingresos, $("#buscarIngresos").val())
                     );
                 });
 
@@ -262,24 +268,42 @@ $(document).ready(function () {
         return paginationHtml;
     }
 
-    function cargarTablaIngresos(ingresos) {
-        let disabled = ingresos.saldo == 0 ? "disabled" : "";
+    function cargandoDatos() {
+        $("#ingresosTable tbody").empty();
+        $("#ingresosTable tbody").append(
+            `<tr class="spinner-row">
+                    <td colspan="8" align="center">
+                        <div class="spinner-wrapper">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Cargando...</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`
+        );
+    }
 
+     function cargarTablaIngresos(ingresos, term) {
         let html = `<tr>
                         <td>${ingresos.fecha}</td>
+                        <td>${ingresos.documento}</td>
                         <td>${ingresos.monto}</td>
                         <td>${ingresos.detalle}</td>
                         <td>${ingresos.usuario}</td>
                         <td>${ingresos.estudiante}</td>
                         <td>
-                            <button class="btn btn-success pago" 
-                                data-codigo="${ingresos.id}" 
-                                data-ingresos="${ingresos.ingresos}"
-                                title="pago cuota"
-                                ${disabled}
-                                >
-                                <i class="fas fa-money-bill-wave"></i>
-                            </button>
+                        <a href="#" class="btn btn-success btn-sm pago"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante-render/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-ticket-alt"></i>
+                       </a>
+                        </td>
+                        <td>
+                        <a href="#" class="btn btn-primary btn-sm" title="Ver Comprobante"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-print"></i>
+                       </a>
                         </td>
                     </tr>`;
         return html;

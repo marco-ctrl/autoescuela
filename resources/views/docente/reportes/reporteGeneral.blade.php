@@ -13,7 +13,7 @@
                     <input type="date" id="fecha" class="form-control" value="{{ date('Y-m-d') }}">
                     <button class="btn btn-outline-primary" type="button" id="btn-filtrar"><i class="fas fa-eye"></i> Mostrar</button>
                     
-                    <form method="POST" action="{{ route('docente.pdf.reporte-general') }}">
+                    <form method="POST" action="{{ route('docente.pdf.reporte-general') }}" target="_blank">
                         <input type="hidden" id="usuario" name="usuario" />
                         <input type="hidden" id="datos" name="datos" />
                         <button class="btn btn-outline-danger" type="submit" id="btn-pdf"><i class="far fa-file-pdf"></i> Exportar PDF</button>

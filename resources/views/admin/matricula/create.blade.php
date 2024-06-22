@@ -27,6 +27,7 @@
                             @include('admin.estudiante._partials.form')
                         </div>
                         <div class="modal-footer">
+                            <a class="btn btn-danger" href="{{ route('admin.matriculas.index') }}"><i class="fas fa-times-circle"></i> Cancelar</a>
                             <button id="btn-siguiente" type="button" class="btn btn-secondary apagar" data-dismiss="modal"
                                 style="display: none;"><i class="fas fa-chevron-right"></i> Siguiente</button>
                             <button id="btn-guardar" type="submit" class="btn btn-primary apagar"><i
@@ -48,12 +49,14 @@
         'btn' => 'Asignar Horarios',
         'iconBtn' => '<i class="fas fa-calendar-check"></i>',
     ])
+
+    @include('components.modal-pdf')
 @endsection
 
 @section('scripts')
     <script src="{{ asset('js/admin/matricula/form.js') }}"></script>
     <script src="{{ asset('js/admin/capturar_foto.js') }}"></script>
     <script src="{{ asset('js/admin/estudiante/estudianteAutocomplete.js') }}"></script>
-    <script src="{{ asset('js/admin/curso/cursoAutocomplete.js') }}"></script>
-    <script src="{{ asset('js/admin/estudiante/validacion.js') }}"></script>
+    <script src="{{ asset('js/admin/estudiante/documentoExtranjero.js') }}"></script>
+    <script src="{{ asset('js/pdfModal.js') }}"></script>
 @endsection

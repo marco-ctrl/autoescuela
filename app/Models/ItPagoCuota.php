@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ItPagoCuota extends Model
 {
@@ -18,6 +19,11 @@ class ItPagoCuota extends Model
     public function cuota(): BelongsTo
     {
         return $this->belongsTo(ItCuota::class, 'ct_codigo', 'ct_codigo');
+    }
+
+    public function comprobante(): HasOne
+    {
+        return $this->hasOne(ItComprobantePago::class, 'pc_codigo', 'pc_codigo');
     }
 
     public function usuario(): BelongsTo
