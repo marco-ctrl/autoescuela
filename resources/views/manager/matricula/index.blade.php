@@ -39,6 +39,9 @@
                             <th>CAT.</th>
                             <th>SEDE</th>
                             <th>CURSO</th>
+                            <th>NRO. CLASES</th>
+                            <th>COSTO CURSO</th>
+                            <th>COSTO EVA.</th>
                             <th>COSTO</th>
                             <th>CANC.</th>
                             <th>SALDO</th>
@@ -92,8 +95,11 @@
             </div>
         </div>
     </div>
-    @include('components.modal-pdf')
+   @include('components.modal-pdf')
     @include('components.modal-confirmacion')
+    @include('components.modal-agregar-evaluacion')
+    @include('components.modal-editar-matricula')
+    @include('components.modal-agregar-curso')
 
 @endsection
 

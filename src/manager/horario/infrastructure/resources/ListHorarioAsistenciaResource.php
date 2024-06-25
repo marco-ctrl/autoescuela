@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
-class ListHorarioMatriculaResource extends JsonResource
+class ListHorarioAsistenciaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -46,6 +46,7 @@ class ListHorarioMatriculaResource extends JsonResource
             'title' => 'Clase' . ' ' . $this->hm_numero,
             'comentario' => 'Asistencia',
             'observacion' => $this->hm_observacion_asistencia,
+            'categoria' => $this->matricula->ma_categoria,
         ];
     }
 }

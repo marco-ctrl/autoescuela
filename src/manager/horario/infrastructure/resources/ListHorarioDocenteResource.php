@@ -27,6 +27,14 @@ class ListHorarioDocenteResource extends JsonResource
             'docente' => $this->docente->do_nombre . ' ' . $this->docente->do_apellido,
             'title' => 'Ocupado',
             'observacion' => $this->hm_observacion_asistencia,
+            'estudiante' => $this->matricula->estudiante->es_nombre . ' ' . $this->matricula->estudiante->es_apellido,
+            'comentario' => 'Asistencia',
+            'observacion' => $this->hm_observacion_asistencia,
+            'numero' => $this->hm_numero,
+            'tema' => $this->hm_tema,
+            'nota' => $this->hm_nota,
+            'categoria' => $this->matricula->ma_categoria,
+            'curso' => $this->matricula->curso->cu_descripcion,
         ];
     }
 }

@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                             <label for="sede">Sede</label>
-                            <select class="form-control" name="sede" id="sede">
+                            <select class="form-control sede" name="sede" id="sede">
                             </select>
                         </div>
                     </form>

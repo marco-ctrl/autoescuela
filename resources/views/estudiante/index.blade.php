@@ -15,54 +15,64 @@
         </div>
     </div>
     <div class="modal fade" id="modalAsistencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Detalles</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Asistencia</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h5>Curso: <strong id="curso"></strong></h5>
+                    <h5>Estudiante: <strong id="estudiante"></strong></h5>
+                    <h5>Categoria: <strong id="categoria"></strong></h5>
                 </div>
-                <div class="modal-body">
-                    <form id="formHorario" class="col-12">
-                        <div class="row">
-                            <div class="col-md-6">
+                <form id="formHorario" class="col-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
                                 <div class="form-group">
-                                    <label for="curso">Curso</label>
-                                    <input type="text" id="curso" class="form-control" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="asistencia">Asistencia
-                                        <input type="checkbox" id="asistencia" class="form-control" value="0" disabled>
-                                    </label>
+                                    <label for="tema">Tema</label>
+                                    <input type="text" id="tema" class="form-control" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="estudiante">Estudiante</label>
-                                    <input type="text" id="estudiante" class="form-control" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="justificacion">Justificacion</label>
-                                    <input type="text" id="justificacion" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="observacion">Oberservacion</label>
-                                    <input type="text" id="observacion" class="form-control" readonly>
-                                </div>
+                            <div class="form-group">
+                                <label for="asistencia">Asistencia
+                                    <input type="checkbox" id="asistencia" class="form-control" value="0" disabled>
+                                </label>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
-                </div>
+                        <div class="col-md-6">
+                            <div>
+                                <div class="form-group">
+                                    <label for="nota">Nota</label>
+                                    <input type="number" id="nota" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="justificacion">Justificacion</label>
+                                <input type="text" id="justificacion" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="observacion">Oberservacion</label>
+                                <input type="text" id="observacion" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
+
 @endsection
 
 @section('styles')

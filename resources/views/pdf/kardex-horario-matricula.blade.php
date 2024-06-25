@@ -119,14 +119,24 @@
             // Convertir la altura a milímetros (1 px = 0.264583 mm)
             const contentHeightMm = contentHeight * 0.264583;
             //{matricula}/{user}/{height}
-            window.location.href = '/public/api/pdf/render/horario-matricula/' + {{$matriculas['id']}} +'/' + {{ $usuario->us_codigo }} +'/' + contentHeightMm;
+            window.location.href = '/api/pdf/render/horario-matricula/' + {{$matriculas['id']}} +'/' + {{ $usuario->us_codigo }} +'/' + contentHeightMm;
         });
     </script>
 </head>
 
 <body>
     <header>
-        <p class="titulo">ESCUELA DE CONDUCCION <br> {{$institucion->in_razon_social}}</p>
+        <table>
+            <tr>
+                <td>
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.png'))) }}"
+                            alt="" style="width: 20mm;">
+                </td>
+                <th>
+                    <p class="titulo">ESCUELA DE CONDUCCION <br> {{$institucion->in_razon_social}}</p>
+                </th>
+            </tr>
+        </table>
     </header>
     <main>
         <p class="fecha-impresion">Fecha y Hora Impresion: {{ date('d/m/Y H:i:s') }}</p>

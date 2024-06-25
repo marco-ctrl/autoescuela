@@ -49,6 +49,11 @@ class ListAllMatriculaResource extends JsonResource
             $fecha_evaluacion = Carbon::parse($fecha_evaluacion)->format('d/m/Y H:i:s');
         }
 
+        $curso = 'Sin Asignar';
+        if($this->curso){
+            $curso = $this->curso->cu_descripcion;
+        }
+
         return [
             'id' => $this->ma_codigo,
             'foto' => $this->estudiante->es_foto,
@@ -67,7 +72,7 @@ class ListAllMatriculaResource extends JsonResource
             'usuario' => $usuario,
             'categoria' => $this->ma_categoria,
             'sede' => $this->sede->se_descripcion,
-            'curso' => $this->curso->cu_descripcion,
+            'curso' => $curso,
             'costo' => $this->ma_costo_total,
             'duracion' => $this->ma_duracion_curso,
             'fecha_evaluacion' => $fecha_evaluacion,
@@ -77,6 +82,9 @@ class ListAllMatriculaResource extends JsonResource
             'detalle' => $detalle,
             'sede_evaluacion' => $this->ma_sede_evaluacion == null ? 'Sin Asignar' : $this->ma_sede_evaluacion,
             'numero_cuotas' => $this->programacion->pg_cuotas,
+            'numClases' => $this->ma_duracion_curso,
+            'costo_curso' =>$this->ma_costo_curso,
+            'costo_evaluacion' => $this->ma_costo_evaluacion
         ];
     }
 }

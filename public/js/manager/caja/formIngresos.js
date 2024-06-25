@@ -283,9 +283,7 @@ $(document).ready(function () {
         );
     }
 
-    function cargarTablaIngresos(ingresos) {
-        let disabled = ingresos.saldo == 0 ? "disabled" : "";
-
+    function cargarTablaIngresos(ingresos, term) {
         let html = `<tr>
                         <td>${ingresos.fecha}</td>
                         <td>${ingresos.documento}</td>
@@ -294,14 +292,18 @@ $(document).ready(function () {
                         <td>${ingresos.usuario}</td>
                         <td>${ingresos.estudiante}</td>
                         <td>
-                            <button class="btn btn-success pago" 
-                                data-codigo="${ingresos.id}" 
-                                data-ingresos="${ingresos.ingresos}"
-                                title="pago cuota"
-                                ${disabled}
-                                >
-                                <i class="fas fa-money-bill-wave"></i>
-                            </button>
+                        <a href="#" class="btn btn-success btn-sm pago"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante-render/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-ticket-alt"></i>
+                       </a>
+                        </td>
+                        <td>
+                        <a href="#" class="btn btn-primary btn-sm" title="Ver Comprobante"
+                        data-toggle="modal" data-target="#pdfModal" 
+                        data-pdf-url="${BASEURL}/pdf/comprobante/${ingresos.id}/${user.us_codigo}">
+                        <i class="fas fa-print"></i>
+                       </a>
                         </td>
                     </tr>`;
         return html;

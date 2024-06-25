@@ -18,15 +18,35 @@ final class StoreMatriculaPOSTController extends Controller
     public function index(StoreMatriculaValidatorRequest $request): JsonResponse
     {
         try {
+           if($request->curso == null && $request->ma_evaluacion == "0" ){
+                return response()->json([
+                    'status' => false,
+                    'message' => __('Debe seleccionar un curso o evaluacion para poder registrar la matrícula'),
+                ], Response::HTTP_OK);
+            }
+            
+            $duracionCurso = 0;
+            $costoCurso = 0;
             $costoEvluacion = 0;
             $costoTotal = 0;
+            $curso = null;
 
-            if ($request->ma_evaluacion == "1") {
+            if ($request->ma_evaluacion == "1" ) {
                 $costoEvluacion = $request->ma_costo_evaluacion;
-                $costoTotal = $request->ma_costo_curso + $request->ma_costo_evaluacion;
+                if($request->ma_costo_curso != null){
+                    $costoTotal = $request->ma_costo_curso + $request->ma_costo_evaluacion;
+                    $costoCurso = $request->ma_costo_curso;
+                    $duracionCurso = $request->ma_duracion;
+                    $curso = $request->cu_codigo;
+                }
+                $costoTotal = $request->ma_costo_evaluacion;
             }
+                
             if ($request->ma_evaluacion == "0") {
                 $costoTotal = $request->ma_costo_curso;
+                $costoCurso = $request->ma_costo_curso;
+                $duracionCurso = $request->ma_duracion;
+                $curso = $request->cu_codigo;
             }
 
             $matricula = ItMatricula::create([
@@ -34,15 +54,15 @@ final class StoreMatriculaPOSTController extends Controller
                 'ma_estado' => 1,
                 'es_codigo' => $request->es_codigo,
                 'ma_ver_promedio' => 1,
-                'cu_codigo' => $request->cu_codigo,
+                'cu_codigo' => $curso,
                 'am_codigo' => $request->am_codigo,
                 'se_codigo' => $request->se_codigo,
                 'ma_categoria' => $request->ma_categoria,
-                'ma_costo_curso' => $request->ma_costo_curso,
+                'ma_costo_curso' => $costoCurso,
                 'ma_costo_evaluacion' => $costoEvluacion,
                 'ma_evaluacion' => $request->ma_evaluacion,
                 'ma_costo_total' => $costoTotal,
-                'ma_duracion_curso' => $request->ma_duracion,
+                'ma_duracion_curso' => $duracionCurso,
                 'us_codigo_create' => auth()->user()->us_codigo,
             ]);
 

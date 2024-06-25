@@ -18,7 +18,7 @@ final class ListAllMatriculaGetController extends Controller
         try {
             $term = $request->input('term'); // Asumiendo que el término de búsqueda se obtiene del request
 
-            $matriculas = ItMatricula::with('usuario.trabajador', 'estudiante')
+            $matriculas = ItMatricula::with('usuario.trabajador', 'estudiante', 'programacion.cuota')
                 ->join('it_estudiante', 'it_matricula.es_codigo', '=', 'it_estudiante.es_codigo')
                 ->where(function ($query) use ($term) {
                     $query->where('it_estudiante.es_nombre', 'LIKE', '%' . $term . '%')
@@ -28,6 +28,7 @@ final class ListAllMatriculaGetController extends Controller
                 })
                 ->orderBy('it_matricula.ma_codigo', 'desc')
                 ->paginate(8, ['it_matricula.*']); // Asegurarse de seleccionar los campos correctos de la tabla principal
+            //dd($matriculas[0]->programacion);
 
             $matriculas->load('usuario.trabajador', 'estudiante');
 

@@ -17,8 +17,8 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="curso">Seleccione un Curso*</label>
-            <input class="form-control" id="curso" placeholder="Seleccione un Curso" autocomplete="off" required>
+            <label for="curso">Seleccione un Curso</label>
+            <input class="form-control" id="curso" placeholder="Seleccione un Curso" autocomplete="off">
             <input type="hidden" name="cu_codigo" id="cu_codigo">
         </div>
 

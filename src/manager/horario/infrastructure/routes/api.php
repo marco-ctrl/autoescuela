@@ -13,6 +13,5 @@ Route::prefix('manager_horario')->group(function () {
         Route::get('/matricula/{matricula}', [ListHorarioMatriculaGETController::class, 'index']);
         Route::get('/docente/{docente}', [ListHorarioDocenteGETController::class, 'index']);
         Route::post('/store', [StoreHorarioMatriculaPOSTController::class, 'index']);
-        Route::delete('/{horario}', [DestroyHorarioMatriculaDELETEController::class, 'index']);
     });
 });

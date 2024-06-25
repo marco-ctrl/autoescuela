@@ -44,6 +44,6 @@ class ItProgramacion extends Model
 
     public function usuarioEntregaCertificado():BelongsTo
     {
-        return $this->belongsTo(User::class, 'ca_usuario_entrega', 'us_codigo');
+        return $this->belongsTo(User::class, 'sv_usuario_entrega', 'us_codigo');
     }
 }

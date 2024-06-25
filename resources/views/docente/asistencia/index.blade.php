@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    @include('admin.components.modal-asistencia')
+    @include('components.modal-asistencia')
 @endsection
 
 @section('styles')
@@ -22,7 +22,8 @@
 @endsection
 
 @section('scripts')
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>
-    <script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>
-    <script src="{{ asset('js/docente/asistencia/form.js') }}"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js'></script>
+<!--<script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>-->
+<script src="{{ asset('vendor/fullcalendar-6.1.11/dist/index.global.js') }}"></script>
+<script src="{{ asset('js/docente/asistencia/form.js') }}"></script>
 @endsection

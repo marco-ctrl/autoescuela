@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
     const baseUrl = window.apiUrl + "/api";
+    const user = JSON.parse(localStorage.getItem("user"));
 
     var horasClases = [];
     var horasOcupadas = [];
@@ -29,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
             agregarHorario(fechaFormateada);
         },
         eventContent: function (arg) {
-            let estudiante = arg.event.extendedProps.estudiante
-            if (estudiante === undefined) {
+            let asistencia = arg.event.extendedProps.asistencia
+            if (asistencia === undefined) {
                 return {
                     html: `<div class="fc-content" id="event-${arg.event.id}">
                         <div class="fc-time">
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           <span class="${arg.event.extendedProps.bgColor} span-horas" style="left: 0;">${arg.event.extendedProps.comentario}</span>
                         </div>
                         <div class="fc-title">
-                        ${arg.event.extendedProps.curso} <br> ${arg.event.extendedProps.estudiante} 
+                        ${arg.event.extendedProps.curso} - Cat.: ${arg.event.extendedProps.categoria} <br> ${arg.event.extendedProps.estudiante} 
                         </div>
                       </div>`,
                 };
@@ -65,13 +66,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     $('#justificacion').prop('disabled', false);
                 }
                 // Mostrar modal con detalles del evento
-                $('#estudiante').val(info.event.extendedProps.estudiante);
+                $('#estudiante').html(info.event.extendedProps.estudiante);
                 $('#tema').val(info.event.extendedProps.tema);
                 $('#nota').val(info.event.extendedProps.nota);
-                $('#curso').val(info.event.extendedProps.curso);
+                $('#curso').html(info.event.extendedProps.curso);
+                $('#categoria').html(info.event.extendedProps.categoria);
                 $('#codigo').val(info.event.id);
                 $('#observacion').val(info.event.extendedProps.observacion);
                 $('#modalAsistencia').modal('show');
+            }
+            else{
+                $('#modalAsistencia').modal('hide');
+                $('#docenteOcupado').html(info.event.extendedProps.docente);
+                $('#estudianteOcupado').html(info.event.extendedProps.estudiante);
+                $('#cursoOcupado').html(info.event.extendedProps.curso);
+                $('#categoriaOcupado').html(info.event.extendedProps.categoria);
+                $('#modalOcupado').modal('show');
             }
         },
         selectConstraint: "businessHours", // Restringe la selección a las horas hábiles
@@ -164,8 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <td>${item.fecha}</td>
                             <td>${item.hora_inicio}</td>
                             <td>${item.hora_final}</td>
-                            <td>${item.docente}</td>
-                            `;
+                            <td>${item.docente}</td>`;
 
                         tbody.appendChild(row);
                     });
@@ -209,6 +218,34 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    $(document).on("click", ".eliminar", function () {
+        var codigoHorario = $(this).data("codigo");
+
+        if (confirm("¿Estás seguro de que deseas eliminar este horario?")) {
+            $.ajax({
+                url: baseUrl + "/manager_horario/" + codigoHorario,
+                type: "DELETE",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + token,
+                },
+                success: function (response) {
+                    console.log("Horario eliminado con éxito.");
+
+                    alertify.set("notifier", "position", "top-right");
+                    alertify.success(response.message);
+                    listarHorarios();
+                },
+                error: function (xhr, status, error) {
+                    console.error(
+                        "Error al eliminar el horario:",
+                        xhr.responseJSON
+                    );
+                },
+            });
+        }
+    });
+
     function agregarEventos(eventos) {
         horasClases.forEach((evento) => {
             if (!eventoYaExiste(evento)) {
@@ -240,6 +277,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 nota: evento.nota,
                 comentario: evento.asistencia == 0 ? 'F' :'A',
                 bgColor: evento.asistencia == 0 ? 'bg-danger' : 'bg-success',
+                categoria: evento.categoria,
             });
         });
     }
@@ -358,4 +396,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    
+    $("#btn-imprimir").click(function (e) {
+        e.preventDefault();
+        //$("#usuario").val(user.us_codigo);
+        //$("#formImprimir").submit();
+        let ma_codigo = $("#ma_codigo").val();
+        let usuario = user.us_codigo;
+        url = `/public/api/pdf/kardes/horario-matricula/${ma_codigo}/${usuario}`;
+        $("#pdfModalLabel").html("Horarios");
+        $("#pdfIframe").attr("src", url);
+        $("#pdfModal").modal("show");
+    });
 });

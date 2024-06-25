@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //$("#formImprimir").submit();
         let ma_codigo = $("#ma_codigo").val();
         let usuario = user.us_codigo;
-        url = `/public/api/pdf/kardes/horario-matricula/${ma_codigo}/${usuario}`;
+        url = `/api/pdf/kardes/horario-matricula/${ma_codigo}/${usuario}`;
         $("#pdfModalLabel").html("Horarios");
         $("#pdfIframe").attr("src", url);
         $("#pdfModal").modal("show");

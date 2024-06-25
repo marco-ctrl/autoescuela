@@ -50,6 +50,9 @@ class ListHorarioResource extends JsonResource
             'asistencia' => $this->hm_asistencia,
             'justificacion' => $this->hm_justificacion,
             'numero' => $this->hm_numero,
+            'tema' => $this->hm_tema,
+            'nota' => $this->hm_nota,
+            'categoria' => $this->matricula->ma_categoria,
         ];
     }
 }

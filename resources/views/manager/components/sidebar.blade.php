@@ -20,12 +20,6 @@
             <span>Inicio</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('manager.certificado-antecedentes-penales.index')}}">
-            <i class="fas fa-folder"></i>
-            <span>Certificado Antecedentes Penales</span>
-        </a>
-    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -46,6 +40,21 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('manager.matriculas.create') }}"><i class="fas fa-edit"></i> Registrar</a>
                 <a class="collapse-item" href="{{ route('manager.matriculas.index') }}"><i class="fas fa-list"></i> Matriculados</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServicio"
+            aria-expanded="true" aria-controls="collapseServicio">
+            <i class="fas fa-folder-open"></i>
+            <span>Servicios</span>
+        </a>
+        <div id="collapseServicio" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('manager.registro.servicios.index') }}"><i class="fas fa-edit"></i> Servicios Registrados</a>
+                <a class="collapse-item" href="{{ route('manager.registro.servicios.create') }}"><i class="fas fa-th-list"></i> servicios</a>
             </div>
         </div>
     </li>

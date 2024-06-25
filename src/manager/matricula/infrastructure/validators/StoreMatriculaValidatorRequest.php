@@ -13,13 +13,13 @@ class StoreMatriculaValidatorRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+       $rules = [
             'estudiante' => 'required|string|min:5',
-            'curso' => 'required|string|min:5',
+            'curso' => 'nullable|string|min:5',
             'es_codigo' => 'required|numeric|exists:it_estudiante,es_codigo',
-            'cu_codigo' => 'required|numeric|exists:it_curso,cu_codigo',
-            'ma_duracion' => 'required|numeric|min:1',
-            'ma_costo_curso' => 'required|numeric|min:0',
+            'cu_codigo' => 'nullable|numeric|exists:it_curso,cu_codigo',
+            'ma_duracion' => 'nullable|numeric|min:1',
+            'ma_costo_curso' => 'nullable|numeric|min:0',
             'ma_costo_evaluacion' => 'nullable|numeric|min:0',
             'ma_evaluacion' => 'required|in:0,1',
             'salida' => 'nullable|numeric|exists:it_pabellon,pa_codigo',

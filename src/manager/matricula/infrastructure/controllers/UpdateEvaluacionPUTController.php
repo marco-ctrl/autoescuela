@@ -44,10 +44,11 @@ final class UpdateEvaluacionPUTController extends Controller
             if ($sede->se_codigo == 1) {
                 $this->sede1->verificarMigracion($matriculas, $request);
                 $update = $this->sede1->updateEvaluacion($matriculas, $request);
+               // dd($update);
             }
             if ($sede->se_codigo == 2) {
                 $this->sede2->verificarMigracion($matriculas, $request);
-                $this->sede2->migrarMatriculas($matriculas);
+                $update = $this->sede2->updateEvaluacion($matriculas, $request);
             }
 
             $matriculas->ma_fecha_evaluacion = $request->fecha;
@@ -60,7 +61,10 @@ final class UpdateEvaluacionPUTController extends Controller
                 }
             }
             if ($sede->se_codigo == 2) {
-                $this->sede2->migrarMatriculas($matriculas);
+                if(!$update)
+                {
+                    $this->sede2->migrarMatriculas($matriculas);
+                }
             }
 
             return response()->json([

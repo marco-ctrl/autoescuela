@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#foto_perfil").attr("src", usuario.docente.es_foto);
     }
     // Verificar si hay un token almacenado
-    if (token === null) {
+    if (token == null) {
         $("#overlay").hide();
         window.location.href = baseUrl + "/login";
     }

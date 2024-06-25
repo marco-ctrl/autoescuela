@@ -84,7 +84,7 @@ class MatriculaController extends Controller
 
         $institucion = ItInstitucion::first();
 
-        $pdf = Pdf::setPaper([0,0,226.772456,1210], 'portrait');
+        $pdf = Pdf::setPaper([0,0,226.772456,1510], 'portrait');
         $pdf->setOption(['margin_left' => 0]);
         $pdf->loadView('pdf.matriculaTicket',
             compact('data', 'usuario', 'matriculas', 'cuotas', 'institucion')

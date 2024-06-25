@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           <span class="${arg.event.extendedProps.bgColor} span-horas" style="left: 0;">${arg.event.extendedProps.comentario}</span>
                         </div>
                         <div class="fc-title">
-                        ${arg.event.extendedProps.curso} <br> ${arg.event.extendedProps.estudiante} 
+                        ${arg.event.extendedProps.curso} - Cat.: ${arg.event.extendedProps.categoria} <br> ${arg.event.extendedProps.estudiante} 
                         </div>
                       </div>`,
                 };
@@ -56,10 +56,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 $("#justificacion").prop("disabled", false);
             }
             // Mostrar modal con detalles del evento
-            $("#estudiante").val(info.event.extendedProps.estudiante);
-            $('#tema').val(info.event.extendedProps.tema);
-            $('#nota').val(info.event.extendedProps.nota);
-            $("#curso").val(info.event.extendedProps.curso);
+            $("#estudiante").html(info.event.extendedProps.estudiante);
+            $("#tema").val(info.event.extendedProps.tema);
+            $("#nota").val(info.event.extendedProps.nota);
+            $("#curso").html(info.event.extendedProps.curso);
+            $("#categoria").html(info.event.extendedProps.categoria);
             $("#codigo").val(info.event.id);
             $("#observacion").val(info.event.extendedProps.observacion);
             $("#modalAsistencia").modal("show");
@@ -117,11 +118,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.status) {
                     alertify.set("notifier", "position", "top-right");
                     alertify.success(response.message);
-                    $('#formHorario')[0].reset();
+                    $("#formHorario")[0].reset();
                     $("#modalAsistencia").modal("hide");
-                    
+
                     listarHorarios();
                 } else {
+                    console.log(response.status);
                     alertify.set("notifier", "position", "top-right");
                     alertify.error(response.message);
                 }
@@ -201,15 +203,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 end: evento.end,
                 backgroundColor: evento.color,
                 docente: evento.docente,
+                asistencia: evento.asistencia,
+                bgColor: evento.bgColor,
+                numero: evento.numero,
                 estudiante: evento.estudiante,
                 curso: evento.curso,
-                observacion: evento.observacion,
-                asistencia: evento.asistencia,
                 tema: evento.tema,
                 nota: evento.nota,
                 comentario: evento.asistencia == 0 ? "F" : "A",
                 bgColor: evento.asistencia == 0 ? "bg-danger" : "bg-success",
-                numero: evento.numero,
+                categoria: evento.categoria,
             });
         });
     }

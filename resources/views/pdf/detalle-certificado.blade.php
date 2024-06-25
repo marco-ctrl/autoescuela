@@ -124,7 +124,7 @@
     <p style="padding-top: 20px; text-align: right; font-size: 10px">Fecha y Hora Impresion: {{ date('d-m-Y H:i:s') }}</p>
     <table class="datos-personales">
         <tr>
-            <th colspan="2">Certificado antecedentes penales</th>
+            <th colspan="2">{{ $programacion['servicio'] }}</th>
         </tr>
         <tr>
             <td>numero de documento</td>

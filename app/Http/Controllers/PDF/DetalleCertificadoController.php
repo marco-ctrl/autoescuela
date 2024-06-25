@@ -11,7 +11,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
-use Src\admin\certificado_antecedentes\infrastructure\resources\ListPagoCuotaResource;
+use Src\admin\servicios\infrastructure\resources\ListPagoCuotaResource;
 use Src\admin\horario\infrastructure\resources\ListHorarioMatriculaResource;
 use Src\admin\matricula\infrastructure\resources\ListAllMatriculaResource;
 use Symfony\Component\HttpFoundation\Response;
